@@ -1,0 +1,66 @@
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+import unittest
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, '-m', 'icl.cli', *args],
+        cwd=PROJECT_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+
+class CLITests(unittest.TestCase):
+    def test_compile_inline_python(self) -> None:
+        result = run_cli('compile', '--code', 'x := 1 + 2;', '--target', 'python')
+        self.assertEqual(result.returncode, 0)
+        self.assertIn('x = (1 + 2)', result.stdout)
+
+    def test_check_ok(self) -> None:
+        result = run_cli('check', '--code', 'fn add(a,b)=>a+b; x := @add(1,2);')
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.stdout.strip(), 'OK')
+
+    def test_explain_json(self) -> None:
+        result = run_cli('explain', '--code', 'x := 1;')
+        self.assertEqual(result.returncode, 0)
+        payload = json.loads(result.stdout)
+        self.assertIn('ast', payload)
+        self.assertIn('graph', payload)
+
+    def test_compile_error_exit_code(self) -> None:
+        result = run_cli('compile', '--code', 'ret 1;', '--target', 'python')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('SEM008', result.stderr)
+
+    def test_compile_with_macro_plugin(self) -> None:
+        result = run_cli(
+            'compile',
+            '--code',
+            '#echo(9);',
+            '--target',
+            'python',
+            '--plugin',
+            'icl.plugins.std_macros:register',
+        )
+        self.assertEqual(result.returncode, 0)
+        self.assertIn('print(9)', result.stdout)
+
+    def test_compile_rust_target(self) -> None:
+        result = run_cli('compile', '--code', 'x := 1;', '--target', 'rust')
+        self.assertEqual(result.returncode, 0)
+        self.assertIn('fn main() {', result.stdout)
+
+
+if __name__ == '__main__':
+    unittest.main()
