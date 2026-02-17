@@ -18,6 +18,7 @@ ICL is a universal translation platform with deterministic semantics:
 
 ```text
 ICL Source
+  -> Syntax Preprocess
   -> Parser
   -> AST
   -> IR
@@ -45,6 +46,7 @@ ICL Source
 - Pack manifest validation and contract test harness.
 - Feature coverage matrix audit (`declared support` vs `observed behavior`) via `icl contract test`.
 - Structured unsupported-feature failures (`LOW001`) and structured lowering fallback errors (`LOW002`, `LOW003`).
+- Optional natural alias layer (`prnt`, `mkfn`, `lambda`, etc.) with traceable normalization.
 - Intent graph + source map artifacts.
 - HTTP API, stdio agent adapter, and MCP server.
 
@@ -77,6 +79,9 @@ icl contract test --all
 # list and validate packs
 icl pack list
 icl pack validate
+
+# inspect alias mappings
+icl alias list --mode extended
 ```
 
 Contract behavior:
@@ -124,6 +129,15 @@ icl agent
 icl mcp --root /home/aru/ICL
 ```
 
+### Standalone MCP Binary
+```bash
+# build
+.venv/bin/pyinstaller --noconfirm icl-mcp.spec
+
+# run
+./dist/icl-mcp --root /home/aru/ICL
+```
+
 Core service methods:
 - `compile`
 - `check`
@@ -138,10 +152,16 @@ Static target runnability:
 ## Documentation Index
 - `ICL_2.0_UNIVERSAL_TRANSLATION_ARCHITECTURE_PLAN.md`
 - `ICL_LANGUAGE_CONTRACT.md`
+- `UNIVERSAL_ALIAS_MAP.md`
 - `COMPILER_ARCHITECTURE.md`
 - `LANGUAGE_PACK_SPEC.md`
 - `SIMULATION_NOTES.md`
+- `FEATURE_COVERAGE_MATRIX.md`
+- `PHASE4_VALIDATION_REPORT.md`
+- `PHASE5_HARDENING_REPORT.md`
+- `PHASE6_STABILIZATION_REPORT.md`
 - `MIGRATION_NOTES_v2.md`
+- `RELEASE_NOTES_v2.0.0.md`
 - `docs/cli_guide.md`
 
 ## Development

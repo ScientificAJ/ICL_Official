@@ -14,6 +14,7 @@ from icl.ast import (
     FunctionDefStmt,
     IdentifierExpr,
     IfStmt,
+    LambdaExpr,
     LiteralExpr,
     LoopStmt,
     MacroStmt,
@@ -136,6 +137,13 @@ class IRCall(IRExpr):
     callee: IRExpr | None = None
     args: list[IRExpr] | None = None
     at_prefixed: bool = False
+
+
+@dataclass
+class IRLambda(IRExpr):
+    params: list[IRParam] | None = None
+    body: IRExpr | None = None
+    return_type: str | None = None
 
 
 class IRBuilder:
@@ -290,6 +298,16 @@ class IRBuilder:
                 callee=self._build_expr(expr.callee),
                 args=[self._build_expr(arg) for arg in expr.args],
                 at_prefixed=expr.at_prefixed,
+            )
+
+        if isinstance(expr, LambdaExpr):
+            return IRLambda(
+                ir_id=self._new_id("expr"),
+                span=expr.span,
+                expr_type=inferred_type,
+                params=[IRParam(name=param.name, type_hint=param.type_hint) for param in expr.params],
+                body=self._build_expr(expr.body),
+                return_type=expr.return_type,
             )
 
         raise TypeError(f"Unsupported AST expression in IRBuilder: {type(expr).__name__}")

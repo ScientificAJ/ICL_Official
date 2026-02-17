@@ -13,8 +13,12 @@
 - `compile --targets`
 - `pack list`, `pack validate`
 - `contract test`
+ - `alias list`
+ - `compile/check/explain --natural --alias-mode`
 6. Contract harness now audits feature matrix consistency (declared coverage vs observed behavior).
 7. Multi-target compile responses/artifacts carry bundle file maps to avoid fragment-only outputs.
+8. Lambda expression support is first-class (`lam(...) => expr`) in stable targets.
+9. Optional natural alias normalization added with trace output for service/MCP.
 
 ## Compatibility
 - Existing `compile --target python|js|rust` behavior is preserved.
@@ -30,6 +34,8 @@
 - Pack manifest validation and contract test harness.
 - Web scaffolding output bundle.
 - Structured lowering fallback diagnostics (`LOW002`, `LOW003`) and unsupported feature diagnostics (`LOW001`).
+- Contract coverage now includes lambda as required stable feature.
+- Feature coverage matrix and phase validation artifacts are generated in `output/phase4/`.
 
 ## Known Limitations
 - Experimental packs are best-effort syntax scaffolds.

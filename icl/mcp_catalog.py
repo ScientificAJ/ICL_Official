@@ -46,6 +46,9 @@ def tools_list() -> list[dict[str, Any]]:
                     "include_ir": {"type": "boolean"},
                     "include_lowered": {"type": "boolean"},
                     "include_bundle": {"type": "boolean"},
+                    "include_alias_trace": {"type": "boolean"},
+                    "natural_aliases": {"type": "boolean"},
+                    "alias_mode": {"type": "string", "enum": ["core", "extended"]},
                     "plugins": {
                         "oneOf": [
                             {"type": "string"},
@@ -72,6 +75,8 @@ def tools_list() -> list[dict[str, Any]]:
                     "source": {"type": "string"},
                     "input_path": {"type": "string"},
                     "filename": {"type": "string"},
+                    "natural_aliases": {"type": "boolean"},
+                    "alias_mode": {"type": "string", "enum": ["core", "extended"]},
                     "plugins": {
                         "oneOf": [
                             {"type": "string"},
@@ -92,6 +97,9 @@ def tools_list() -> list[dict[str, Any]]:
                     "input_path": {"type": "string"},
                     "filename": {"type": "string"},
                     "target": {"type": "string"},
+                    "natural_aliases": {"type": "boolean"},
+                    "alias_mode": {"type": "string", "enum": ["core", "extended"]},
+                    "include_alias_trace": {"type": "boolean"},
                     "plugins": {
                         "oneOf": [
                             {"type": "string"},
@@ -340,6 +348,12 @@ def _resource_entries(root: Path) -> dict[str, ResourceEntry]:
         "Normative language contract for all language packs.",
     )
     add(
+        "icl://docs/alias_map",
+        "UNIVERSAL_ALIAS_MAP.md",
+        "Universal Alias Map",
+        "Natural alias catalog and cross-target translation mapping.",
+    )
+    add(
         "icl://docs/pack_spec",
         "LANGUAGE_PACK_SPEC.md",
         "Language Pack Spec",
@@ -350,6 +364,36 @@ def _resource_entries(root: Path) -> dict[str, ResourceEntry]:
         "MIGRATION_NOTES_v2.md",
         "Migration Notes v2",
         "Release notes and migration details for ICL v2.0.",
+    )
+    add(
+        "icl://docs/release_notes_v2",
+        "RELEASE_NOTES_v2.0.0.md",
+        "Release Notes v2.0.0",
+        "Versioned release notes for ICL v2.0.0.",
+    )
+    add(
+        "icl://docs/feature_matrix",
+        "FEATURE_COVERAGE_MATRIX.md",
+        "Feature Coverage Matrix",
+        "Reality-checked stable target coverage matrix from contract tests.",
+    )
+    add(
+        "icl://docs/phase4_validation",
+        "PHASE4_VALIDATION_REPORT.md",
+        "Phase 4 Validation",
+        "Contract and golden-program validation evidence for ICL v2.0.",
+    )
+    add(
+        "icl://docs/phase5_hardening",
+        "PHASE5_HARDENING_REPORT.md",
+        "Phase 5 Hardening",
+        "Backward-compatibility and documentation hardening evidence.",
+    )
+    add(
+        "icl://docs/phase6_stabilization",
+        "PHASE6_STABILIZATION_REPORT.md",
+        "Phase 6 Stabilization",
+        "Versioning and release artifact stabilization evidence.",
     )
 
     examples_dir = (root / "examples").resolve()

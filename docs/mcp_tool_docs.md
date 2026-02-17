@@ -29,6 +29,8 @@ icl mcp --root /home/aru/ICL
 - multi-target (`targets`)
 - optional payloads (`include_ir`, `include_lowered`, `include_graph`, `include_source_map`)
 - optional bundle payload (`include_bundle`) for single-target full artifact files
+- natural alias normalization (`natural_aliases`, `alias_mode`)
+- alias trace payload (`include_alias_trace`)
 
 Multi-target responses include runnable bundle artifacts per target (`primary_path` + `files`).
 

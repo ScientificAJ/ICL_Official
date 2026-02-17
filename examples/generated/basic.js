@@ -1,3 +1,7 @@
+function print(value) {
+  console.log(value);
+}
+
 function add(a, b) {
     return (a + b);
 }

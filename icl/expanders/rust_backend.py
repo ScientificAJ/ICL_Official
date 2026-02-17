@@ -113,11 +113,15 @@ class RustBackend(BackendEmitter):
 
             existing_ty = self._resolve_symbol(name)
             if existing_ty is not None:
+                if existing_ty == "Fn":
+                    return [self.indent(f"{name} = {value_src};", indent)], False
                 coerced = self._coerce(value_src, value_ty, existing_ty)
                 return [self.indent(f"{name} = {coerced};", indent)], False
 
             inferred = self._normalize_decl_type(value_ty)
             self._define_symbol(name, inferred)
+            if inferred == "Fn":
+                return [self.indent(f"let mut {name} = {value_src};", indent)], False
             coerced = self._coerce(value_src, value_ty, inferred)
             return [self.indent(f"let mut {name}: {inferred} = {coerced};", indent)], False
 
@@ -285,6 +289,25 @@ class RustBackend(BackendEmitter):
             return_type = self._function_return_types.get(callee, "f64")
             return f"{callee}({', '.join(args_src)})", return_type
 
+        if kind == "LambdaIntent":
+            params = node.attrs.get("params", [])
+            body_ids = graph.child_ids(node_id, "body")
+
+            rendered_params: list[str] = []
+            self._push_scope()
+            for param in params:
+                param_name = str(param.get("name"))
+                param_type = self._symbolic_to_rust(param.get("type_hint"))
+                self._define_symbol(param_name, param_type)
+                rendered_params.append(param_name)
+
+            body_src = "0.0"
+            if body_ids:
+                body_src, _ = self._emit_expr(graph, body_ids[0])
+            self._pop_scope()
+
+            return f"|{', '.join(rendered_params)}| {body_src}", "Fn"
+
         return "0.0", "f64"
 
     def _push_scope(self) -> None:
@@ -319,12 +342,15 @@ class RustBackend(BackendEmitter):
 
     @staticmethod
     def _normalize_decl_type(inferred: str) -> str:
-        if inferred in {"f64", "i64", "bool", "String", "()"}:
+        if inferred in {"f64", "i64", "bool", "String", "()", "Fn"}:
             return inferred
         return "f64"
 
     def _coerce(self, expr_src: str, from_ty: str, to_ty: str) -> str:
         if to_ty == from_ty:
+            return expr_src
+
+        if from_ty == "Fn" or to_ty == "Fn":
             return expr_src
 
         if to_ty == "f64" and from_ty == "i64":

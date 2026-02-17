@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from icl.ast import AssignmentStmt, FunctionDefStmt, IfStmt, LoopStmt
+from icl.ast import AssignmentStmt, FunctionDefStmt, IfStmt, LambdaExpr, LoopStmt
 from icl.errors import ParseError
 from icl.lexer import Lexer
 from icl.parser import Parser
@@ -35,6 +35,12 @@ class ParserTests(unittest.TestCase):
     def test_invalid_syntax_raises(self) -> None:
         with self.assertRaises(ParseError):
             parse_source('if true ? { x := 1; ')
+
+    def test_lambda_expression_assignment(self) -> None:
+        program = parse_source('inc := lam(n:Num):Num => n + 1;')
+        stmt = program.statements[0]
+        self.assertIsInstance(stmt, AssignmentStmt)
+        self.assertIsInstance(stmt.value, LambdaExpr)
 
 
 if __name__ == '__main__':

@@ -35,6 +35,14 @@ class SemanticTests(unittest.TestCase):
             analyze('x:Num := "hello";')
         self.assertEqual(ctx.exception.code, 'SEM002')
 
+    def test_lambda_value_is_callable(self) -> None:
+        analyze('inc := lam(n:Num):Num => n + 1; out := inc(2);')
+
+    def test_lambda_return_type_mismatch(self) -> None:
+        with self.assertRaises(SemanticError) as ctx:
+            analyze('bad := lam(n:Num):Bool => n + 1;')
+        self.assertEqual(ctx.exception.code, 'SEM021')
+
 
 if __name__ == '__main__':
     unittest.main()

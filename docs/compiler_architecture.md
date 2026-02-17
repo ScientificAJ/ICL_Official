@@ -1,14 +1,15 @@
 # Compiler Architecture (v2)
 
 ## Pipeline
-1. Lexer (`icl/lexer.py`)
-2. Parser (`icl/parser.py`)
-3. Semantic analyzer (`icl/semantic.py`)
-4. IR builder (`icl/ir.py`)
-5. Lowering (`icl/lowering.py`)
-6. Language pack emission (`icl/language_pack.py`, `icl/packs/`)
-7. Scaffolding (`icl/scaffolder.py`)
-8. Optional graph optimization (`icl/optimize.py`) for debug/analysis artifacts
+1. Syntax preprocess plugins (`icl/plugin.py`, `icl/plugins/`)
+2. Lexer (`icl/lexer.py`)
+3. Parser (`icl/parser.py`)
+4. Semantic analyzer (`icl/semantic.py`)
+5. IR builder (`icl/ir.py`)
+6. Lowering (`icl/lowering.py`)
+7. Language pack emission (`icl/language_pack.py`, `icl/packs/`)
+8. Scaffolding (`icl/scaffolder.py`)
+9. Optional graph optimization (`icl/optimize.py`) for debug/analysis artifacts
 
 ## Stage Ownership
 - Parser/semantic define language truth.

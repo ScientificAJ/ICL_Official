@@ -14,6 +14,7 @@ from icl.ast import (
     FunctionDefStmt,
     IdentifierExpr,
     IfStmt,
+    LambdaExpr,
     LiteralExpr,
     LoopStmt,
     MacroStmt,
@@ -381,6 +382,24 @@ class SemanticAnalyzer:
 
             return self._record(expr, TYPE_ANY)
 
+        if isinstance(expr, LambdaExpr):
+            lambda_scope = Scope(parent=scope)
+            for param in expr.params:
+                lambda_scope.define(SymbolInfo(name=param.name, type_name=param.type_hint or TYPE_ANY))
+
+            body_type = self._infer_expr_type(expr.body, lambda_scope)
+            if expr.return_type and not self._is_compatible(expr.return_type, body_type):
+                raise SemanticError(
+                    code="SEM021",
+                    message=(
+                        f"Lambda returns '{body_type}' "
+                        f"but is annotated as '{expr.return_type}'."
+                    ),
+                    span=expr.span,
+                    hint="Adjust lambda return annotation or expression type.",
+                )
+            return self._record(expr, TYPE_FN)
+
         if isinstance(expr, CallExpr):
             for arg in expr.args:
                 self._infer_expr_type(arg, scope)
@@ -395,24 +414,28 @@ class SemanticAnalyzer:
                         span=expr.span,
                         hint="Define function before calling it.",
                     )
-                if not symbol.is_function:
-                    raise SemanticError(
-                        code="SEM018",
-                        message=f"Symbol '{expr.callee.name}' is not callable.",
-                        span=expr.span,
-                        hint="Only fn symbols can be invoked.",
-                    )
-                if symbol.arity is not None and symbol.arity != len(expr.args):
-                    raise SemanticError(
-                        code="SEM019",
-                        message=(
-                            f"Function '{expr.callee.name}' expects {symbol.arity} args, "
-                            f"got {len(expr.args)}."
-                        ),
-                        span=expr.span,
-                        hint="Adjust call argument count.",
-                    )
-                return self._record(expr, symbol.return_type or TYPE_ANY)
+                if symbol.is_function:
+                    if symbol.arity is not None and symbol.arity != len(expr.args):
+                        raise SemanticError(
+                            code="SEM019",
+                            message=(
+                                f"Function '{expr.callee.name}' expects {symbol.arity} args, "
+                                f"got {len(expr.args)}."
+                            ),
+                            span=expr.span,
+                            hint="Adjust call argument count.",
+                        )
+                    return self._record(expr, symbol.return_type or TYPE_ANY)
+
+                if symbol.type_name in {TYPE_FN, TYPE_ANY}:
+                    return self._record(expr, TYPE_ANY)
+
+                raise SemanticError(
+                    code="SEM018",
+                    message=f"Symbol '{expr.callee.name}' is not callable.",
+                    span=expr.span,
+                    hint="Only function symbols or Fn-typed values can be invoked.",
+                )
 
             if callee_type not in {TYPE_FN, TYPE_ANY}:
                 raise SemanticError(

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from copy import deepcopy
 from dataclasses import replace
 import importlib
 import inspect
@@ -64,6 +65,7 @@ class PluginManager:
         self._backends: dict[str, BackendEmitter] = {}
         self._macro_plugins: dict[str, MacroPlugin] = {}
         self._syntax_plugins: list[SyntaxPlugin] = []
+        self._syntax_metadata: dict[str, Any] = {}
 
     def register_backend(self, name: str, emitter: BackendEmitter) -> None:
         """Register target backend emitter by name."""
@@ -84,8 +86,13 @@ class PluginManager:
     def preprocess_source(self, source: str) -> str:
         """Apply pre-lexing syntax plugin transformations."""
         updated = source
+        self._syntax_metadata = {}
         for plugin in self._syntax_plugins:
             updated = plugin.preprocess_source(updated)
+            if hasattr(plugin, "metadata"):
+                raw_metadata = getattr(plugin, "metadata")
+                if callable(raw_metadata):
+                    self._syntax_metadata[plugin.name] = raw_metadata()
         return updated
 
     def transform_program(self, program: Program) -> Program:
@@ -94,6 +101,10 @@ class PluginManager:
         for plugin in self._syntax_plugins:
             updated = plugin.transform_program(updated)
         return updated
+
+    def metadata_snapshot(self) -> dict[str, Any]:
+        """Return metadata produced by the most recent syntax preprocessing pass."""
+        return deepcopy(self._syntax_metadata)
 
     def expand_macros(self, program: Program) -> Program:
         """Expand macro statements recursively using registered macro plugins."""

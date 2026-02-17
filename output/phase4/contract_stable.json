@@ -1,0 +1,1252 @@
+{
+  "cases": [
+    {
+      "features": [
+        "assignment",
+        "arithmetic",
+        "literal"
+      ],
+      "name": "assignment_arithmetic",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "assignment",
+        "reference",
+        "arithmetic",
+        "literal"
+      ],
+      "name": "reference_reuse",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "function",
+        "return",
+        "call",
+        "assignment",
+        "arithmetic",
+        "literal",
+        "reference"
+      ],
+      "name": "function_call_return",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "lambda",
+        "call",
+        "assignment",
+        "arithmetic",
+        "literal",
+        "reference"
+      ],
+      "name": "lambda_assignment_call",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "if",
+        "comparison",
+        "assignment",
+        "literal",
+        "reference"
+      ],
+      "name": "if_else_comparison",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "loop",
+        "assignment",
+        "arithmetic",
+        "literal",
+        "reference"
+      ],
+      "name": "loop_update",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "assignment",
+        "logic",
+        "unary",
+        "literal"
+      ],
+      "name": "unary_logic",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "expression_stmt",
+        "call",
+        "literal"
+      ],
+      "name": "expression_stmt_call",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "typed_annotation",
+        "assignment",
+        "literal"
+      ],
+      "name": "typed_annotation",
+      "required_for_stable": true
+    },
+    {
+      "features": [
+        "at_call",
+        "call",
+        "function",
+        "return",
+        "assignment",
+        "arithmetic",
+        "literal",
+        "reference"
+      ],
+      "name": "at_call",
+      "required_for_stable": true
+    }
+  ],
+  "feature_matrix": {
+    "js": {
+      "contradictions": [],
+      "features": {
+        "arithmetic": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "loop_update",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 6,
+          "status": "supported"
+        },
+        "assignment": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "unary_logic",
+            "typed_annotation",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 9,
+          "status": "supported"
+        },
+        "at_call": {
+          "cases": [
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "call": {
+          "cases": [
+            "function_call_return",
+            "lambda_assignment_call",
+            "expression_stmt_call",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 4,
+          "status": "supported"
+        },
+        "comparison": {
+          "cases": [
+            "if_else_comparison"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "expression_stmt": {
+          "cases": [
+            "expression_stmt_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "function": {
+          "cases": [
+            "function_call_return",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 2,
+          "status": "supported"
+        },
+        "if": {
+          "cases": [
+            "if_else_comparison"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "lambda": {
+          "cases": [
+            "lambda_assignment_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "literal": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "unary_logic",
+            "expression_stmt_call",
+            "typed_annotation",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 10,
+          "status": "supported"
+        },
+        "logic": {
+          "cases": [
+            "unary_logic"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "loop": {
+          "cases": [
+            "loop_update"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "reference": {
+          "cases": [
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 6,
+          "status": "supported"
+        },
+        "return": {
+          "cases": [
+            "function_call_return",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 2,
+          "status": "supported"
+        },
+        "typed_annotation": {
+          "cases": [
+            "typed_annotation"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "unary": {
+          "cases": [
+            "unary_logic"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        }
+      },
+      "stability": "stable",
+      "target": "js"
+    },
+    "python": {
+      "contradictions": [],
+      "features": {
+        "arithmetic": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "loop_update",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 6,
+          "status": "supported"
+        },
+        "assignment": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "unary_logic",
+            "typed_annotation",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 9,
+          "status": "supported"
+        },
+        "at_call": {
+          "cases": [
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "call": {
+          "cases": [
+            "function_call_return",
+            "lambda_assignment_call",
+            "expression_stmt_call",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 4,
+          "status": "supported"
+        },
+        "comparison": {
+          "cases": [
+            "if_else_comparison"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "expression_stmt": {
+          "cases": [
+            "expression_stmt_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "function": {
+          "cases": [
+            "function_call_return",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 2,
+          "status": "supported"
+        },
+        "if": {
+          "cases": [
+            "if_else_comparison"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "lambda": {
+          "cases": [
+            "lambda_assignment_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "literal": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "unary_logic",
+            "expression_stmt_call",
+            "typed_annotation",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 10,
+          "status": "supported"
+        },
+        "logic": {
+          "cases": [
+            "unary_logic"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "loop": {
+          "cases": [
+            "loop_update"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "reference": {
+          "cases": [
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 6,
+          "status": "supported"
+        },
+        "return": {
+          "cases": [
+            "function_call_return",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 2,
+          "status": "supported"
+        },
+        "typed_annotation": {
+          "cases": [
+            "typed_annotation"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "unary": {
+          "cases": [
+            "unary_logic"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        }
+      },
+      "stability": "stable",
+      "target": "python"
+    },
+    "rust": {
+      "contradictions": [],
+      "features": {
+        "arithmetic": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "loop_update",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 6,
+          "status": "supported"
+        },
+        "assignment": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "unary_logic",
+            "typed_annotation",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 9,
+          "status": "supported"
+        },
+        "at_call": {
+          "cases": [
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "call": {
+          "cases": [
+            "function_call_return",
+            "lambda_assignment_call",
+            "expression_stmt_call",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 4,
+          "status": "supported"
+        },
+        "comparison": {
+          "cases": [
+            "if_else_comparison"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "expression_stmt": {
+          "cases": [
+            "expression_stmt_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "function": {
+          "cases": [
+            "function_call_return",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 2,
+          "status": "supported"
+        },
+        "if": {
+          "cases": [
+            "if_else_comparison"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "lambda": {
+          "cases": [
+            "lambda_assignment_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "literal": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "unary_logic",
+            "expression_stmt_call",
+            "typed_annotation",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 10,
+          "status": "supported"
+        },
+        "logic": {
+          "cases": [
+            "unary_logic"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "loop": {
+          "cases": [
+            "loop_update"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "reference": {
+          "cases": [
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 6,
+          "status": "supported"
+        },
+        "return": {
+          "cases": [
+            "function_call_return",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 2,
+          "status": "supported"
+        },
+        "typed_annotation": {
+          "cases": [
+            "typed_annotation"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "unary": {
+          "cases": [
+            "unary_logic"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        }
+      },
+      "stability": "stable",
+      "target": "rust"
+    },
+    "web": {
+      "contradictions": [],
+      "features": {
+        "arithmetic": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "loop_update",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 6,
+          "status": "supported"
+        },
+        "assignment": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "unary_logic",
+            "typed_annotation",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 9,
+          "status": "supported"
+        },
+        "at_call": {
+          "cases": [
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "call": {
+          "cases": [
+            "function_call_return",
+            "lambda_assignment_call",
+            "expression_stmt_call",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 4,
+          "status": "supported"
+        },
+        "comparison": {
+          "cases": [
+            "if_else_comparison"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "expression_stmt": {
+          "cases": [
+            "expression_stmt_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "function": {
+          "cases": [
+            "function_call_return",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 2,
+          "status": "supported"
+        },
+        "if": {
+          "cases": [
+            "if_else_comparison"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "lambda": {
+          "cases": [
+            "lambda_assignment_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "literal": {
+          "cases": [
+            "assignment_arithmetic",
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "unary_logic",
+            "expression_stmt_call",
+            "typed_annotation",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 10,
+          "status": "supported"
+        },
+        "logic": {
+          "cases": [
+            "unary_logic"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "loop": {
+          "cases": [
+            "loop_update"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "reference": {
+          "cases": [
+            "reference_reuse",
+            "function_call_return",
+            "lambda_assignment_call",
+            "if_else_comparison",
+            "loop_update",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 6,
+          "status": "supported"
+        },
+        "return": {
+          "cases": [
+            "function_call_return",
+            "at_call"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 2,
+          "status": "supported"
+        },
+        "typed_annotation": {
+          "cases": [
+            "typed_annotation"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        },
+        "unary": {
+          "cases": [
+            "unary_logic"
+          ],
+          "declared_supported": true,
+          "low001_count": 0,
+          "other_fail_count": 0,
+          "pass_count": 1,
+          "status": "supported"
+        }
+      },
+      "stability": "stable",
+      "target": "web"
+    }
+  },
+  "ok": true,
+  "required_stable_features": [
+    "arithmetic",
+    "assignment",
+    "at_call",
+    "call",
+    "comparison",
+    "expression_stmt",
+    "function",
+    "if",
+    "lambda",
+    "literal",
+    "logic",
+    "loop",
+    "reference",
+    "return",
+    "typed_annotation",
+    "unary"
+  ],
+  "results": [
+    {
+      "case": "assignment_arithmetic",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "reference_reuse",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "function_call_return",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "lambda_assignment_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "if_else_comparison",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "loop_update",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "unary_logic",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "expression_stmt_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "typed_annotation",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "at_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "js"
+    },
+    {
+      "case": "assignment_arithmetic",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "reference_reuse",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "function_call_return",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "lambda_assignment_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "if_else_comparison",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "loop_update",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "unary_logic",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "expression_stmt_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "typed_annotation",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "at_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "python"
+    },
+    {
+      "case": "assignment_arithmetic",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "reference_reuse",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "function_call_return",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "lambda_assignment_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "if_else_comparison",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "loop_update",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "unary_logic",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "expression_stmt_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "typed_annotation",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "at_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "rust"
+    },
+    {
+      "case": "assignment_arithmetic",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "reference_reuse",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "function_call_return",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "lambda_assignment_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "if_else_comparison",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "loop_update",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "unary_logic",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "expression_stmt_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "typed_annotation",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    },
+    {
+      "case": "at_call",
+      "error_code": null,
+      "error_message": null,
+      "ok": true,
+      "target": "web"
+    }
+  ],
+  "stable_only": true,
+  "summary": {
+    "js": {
+      "all_cases_ok": true,
+      "passed": 10,
+      "stability": "stable",
+      "stable_feature_ok": true,
+      "target_ok": true,
+      "total": 10
+    },
+    "python": {
+      "all_cases_ok": true,
+      "passed": 10,
+      "stability": "stable",
+      "stable_feature_ok": true,
+      "target_ok": true,
+      "total": 10
+    },
+    "rust": {
+      "all_cases_ok": true,
+      "passed": 10,
+      "stability": "stable",
+      "stable_feature_ok": true,
+      "target_ok": true,
+      "total": 10
+    },
+    "web": {
+      "all_cases_ok": true,
+      "passed": 10,
+      "stability": "stable",
+      "stable_feature_ok": true,
+      "target_ok": true,
+      "total": 10
+    }
+  },
+  "targets": [
+    "js",
+    "python",
+    "rust",
+    "web"
+  ]
+}

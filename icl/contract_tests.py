@@ -56,6 +56,18 @@ CONTRACT_CASES: list[ContractCase] = [
         ),
     ),
     ContractCase(
+        name="lambda_assignment_call",
+        source="inc := lam(n:Num):Num => n + 1; out := inc(2);",
+        features=(
+            "lambda",
+            "call",
+            "assignment",
+            "arithmetic",
+            "literal",
+            "reference",
+        ),
+    ),
+    ContractCase(
         name="if_else_comparison",
         source="x := 2; if x > 1 ? { y := x; } : { y := 0; }",
         features=("if", "comparison", "assignment", "literal", "reference"),

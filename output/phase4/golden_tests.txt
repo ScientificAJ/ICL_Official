@@ -1,0 +1,8 @@
+test_stable_targets_compile_all_golden_programs (tests.test_golden_programs.GoldenCompileTests.test_stable_targets_compile_all_golden_programs) ... ok
+test_python_and_js_runnable (tests.test_golden_programs.GoldenRunnablePythonJsTests.test_python_and_js_runnable) ... ok
+test_rust_runnable_for_core_static_programs (tests.test_golden_programs.GoldenRunnableRustTests.test_rust_runnable_for_core_static_programs) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.334s
+
+OK

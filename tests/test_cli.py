@@ -66,6 +66,27 @@ class CLITests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn('CLI010', result.stderr)
 
+    def test_compile_with_natural_aliases(self) -> None:
+        result = run_cli(
+            'compile',
+            '--code',
+            'mkfn add(a,b)=>a+b; out := add(1,2); prnt(out);',
+            '--target',
+            'python',
+            '--natural',
+        )
+        self.assertEqual(result.returncode, 0)
+        self.assertIn('def add(a, b):', result.stdout)
+        self.assertIn('print(out)', result.stdout)
+
+    def test_alias_list_json(self) -> None:
+        result = run_cli('alias', 'list', '--mode', 'extended', '--json')
+        self.assertEqual(result.returncode, 0)
+        payload = json.loads(result.stdout)
+        canonical = {item['canonical'] for item in payload}
+        self.assertIn('fn', canonical)
+        self.assertIn('lam', canonical)
+
 
 if __name__ == '__main__':
     unittest.main()

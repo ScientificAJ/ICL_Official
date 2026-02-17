@@ -7,6 +7,8 @@ This guide summarizes active compiler behavior. The normative source is `ICL_LAN
 - Symbolic type model (`Num`, `Str`, `Bool`, `Any`, `Fn`, `Void`).
 - Deterministic operator precedence and statement ordering.
 - Function signatures pre-registered before body analysis.
+- `lam(...) => expr` values are first-class `Fn` expressions.
+- `Fn`-typed symbols are callable (with dynamic return type unless statically declared).
 
 ## Condition and Loop Rules
 - `if` conditions require `Bool` or `Any`.

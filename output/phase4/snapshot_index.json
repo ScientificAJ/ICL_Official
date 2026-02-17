@@ -1,0 +1,62 @@
+{
+  "assignment_arithmetic": {
+    "js": "output/phase4/snapshots/js/assignment_arithmetic.js",
+    "python": "output/phase4/snapshots/python/assignment_arithmetic.py",
+    "rust": "output/phase4/snapshots/rust/assignment_arithmetic.rs",
+    "web": "output/phase4/snapshots/web/assignment_arithmetic.js"
+  },
+  "at_call": {
+    "js": "output/phase4/snapshots/js/at_call.js",
+    "python": "output/phase4/snapshots/python/at_call.py",
+    "rust": "output/phase4/snapshots/rust/at_call.rs",
+    "web": "output/phase4/snapshots/web/at_call.js"
+  },
+  "expression_stmt_call": {
+    "js": "output/phase4/snapshots/js/expression_stmt_call.js",
+    "python": "output/phase4/snapshots/python/expression_stmt_call.py",
+    "rust": "output/phase4/snapshots/rust/expression_stmt_call.rs",
+    "web": "output/phase4/snapshots/web/expression_stmt_call.js"
+  },
+  "function_call_return": {
+    "js": "output/phase4/snapshots/js/function_call_return.js",
+    "python": "output/phase4/snapshots/python/function_call_return.py",
+    "rust": "output/phase4/snapshots/rust/function_call_return.rs",
+    "web": "output/phase4/snapshots/web/function_call_return.js"
+  },
+  "if_else_comparison": {
+    "js": "output/phase4/snapshots/js/if_else_comparison.js",
+    "python": "output/phase4/snapshots/python/if_else_comparison.py",
+    "rust": "output/phase4/snapshots/rust/if_else_comparison.rs",
+    "web": "output/phase4/snapshots/web/if_else_comparison.js"
+  },
+  "lambda_assignment_call": {
+    "js": "output/phase4/snapshots/js/lambda_assignment_call.js",
+    "python": "output/phase4/snapshots/python/lambda_assignment_call.py",
+    "rust": "output/phase4/snapshots/rust/lambda_assignment_call.rs",
+    "web": "output/phase4/snapshots/web/lambda_assignment_call.js"
+  },
+  "loop_update": {
+    "js": "output/phase4/snapshots/js/loop_update.js",
+    "python": "output/phase4/snapshots/python/loop_update.py",
+    "rust": "output/phase4/snapshots/rust/loop_update.rs",
+    "web": "output/phase4/snapshots/web/loop_update.js"
+  },
+  "reference_reuse": {
+    "js": "output/phase4/snapshots/js/reference_reuse.js",
+    "python": "output/phase4/snapshots/python/reference_reuse.py",
+    "rust": "output/phase4/snapshots/rust/reference_reuse.rs",
+    "web": "output/phase4/snapshots/web/reference_reuse.js"
+  },
+  "typed_annotation": {
+    "js": "output/phase4/snapshots/js/typed_annotation.js",
+    "python": "output/phase4/snapshots/python/typed_annotation.py",
+    "rust": "output/phase4/snapshots/rust/typed_annotation.rs",
+    "web": "output/phase4/snapshots/web/typed_annotation.js"
+  },
+  "unary_logic": {
+    "js": "output/phase4/snapshots/js/unary_logic.js",
+    "python": "output/phase4/snapshots/python/unary_logic.py",
+    "rust": "output/phase4/snapshots/rust/unary_logic.rs",
+    "web": "output/phase4/snapshots/web/unary_logic.js"
+  }
+}

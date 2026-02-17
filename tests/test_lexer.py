@@ -42,6 +42,11 @@ class LexerTests(unittest.TestCase):
             Lexer('x := 1 $ 2').tokenize()
         self.assertEqual(ctx.exception.code, 'LEX001')
 
+    def test_recognizes_lambda_keyword(self) -> None:
+        tokens = Lexer('f := lam(x) => x + 1;').tokenize()
+        token_types = [token.token_type for token in tokens]
+        self.assertIn(TokenType.LAM, token_types)
+
 
 if __name__ == '__main__':
     unittest.main()

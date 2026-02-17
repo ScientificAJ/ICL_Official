@@ -26,7 +26,7 @@ from icl.service import safe_dispatch
 
 
 PROTOCOL_VERSION = "2024-11-05"
-SERVER_INFO = {"name": "icl-mcp", "version": "0.1.0"}
+SERVER_INFO = {"name": "icl-mcp", "version": "2.0.0"}
 SERVER_CAPABILITIES = {
     "tools": {"listChanged": False},
     "resources": {"subscribe": False, "listChanged": False},

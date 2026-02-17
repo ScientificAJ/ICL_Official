@@ -1,5 +1,5 @@
 fn main() {
-    println!("{:?}", "hello from macro");
-    println!("{:?}", "dbg:");
-    println!("{:?}", (21 + 21));
+    println!("{:?}", "hello from macro".to_string());
+    println!("{:?}", "dbg:".to_string());
+    println!("{:?}", (21.0 + 21.0));
 }

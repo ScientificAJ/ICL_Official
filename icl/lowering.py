@@ -15,6 +15,7 @@ from icl.ir import (
     IRExpressionStmt,
     IRFunction,
     IRIf,
+    IRLambda,
     IRLiteral,
     IRLoop,
     IRModule,
@@ -124,6 +125,13 @@ class LoweredBinary(LoweredExpr):
 class LoweredCall(LoweredExpr):
     callee: LoweredExpr | None = None
     args: list[LoweredExpr] | None = None
+
+
+@dataclass
+class LoweredLambda(LoweredExpr):
+    params: list[dict[str, str | None]] | None = None
+    body: LoweredExpr | None = None
+    return_type: str | None = None
 
 
 class Lowerer:
@@ -275,6 +283,16 @@ class Lowerer:
                 args=[self._lower_expr(arg, target=target, diagnostics=diagnostics) for arg in (expr.args or [])],
             )
 
+        if isinstance(expr, IRLambda):
+            return LoweredLambda(
+                lowered_id=self._new_id("lexpr"),
+                span=expr.span,
+                expr_type=expr.expr_type,
+                params=[{"name": param.name, "type_hint": param.type_hint} for param in (expr.params or [])],
+                body=self._lower_expr(expr.body, target=target, diagnostics=diagnostics),
+                return_type=expr.return_type,
+            )
+
         raise ExpansionError(
             code="LOW003",
             message=f"Unsupported IR expression in lowering: '{type(expr).__name__}'.",
@@ -333,6 +351,9 @@ def _expr_has_print(expr: LoweredExpr) -> bool:
         left_has = expr.left is not None and _expr_has_print(expr.left)
         right_has = expr.right is not None and _expr_has_print(expr.right)
         return left_has or right_has
+
+    if isinstance(expr, LoweredLambda) and expr.body is not None:
+        return _expr_has_print(expr.body)
 
     return False
 
@@ -418,6 +439,12 @@ def collect_ir_features(module: IRModule) -> set[str]:
             walk_expr(expr.callee)
             for arg in (expr.args or []):
                 walk_expr(arg)
+            return
+
+        if isinstance(expr, IRLambda):
+            features.add("lambda")
+            if expr.body is not None:
+                walk_expr(expr.body)
             return
 
     for stmt in module.statements:
@@ -548,6 +575,21 @@ def lowered_to_graph(module: LoweredModule) -> IntentGraph:
             for idx, arg in enumerate(expr.args or []):
                 arg_id = build_expr(arg)
                 graph.add_edge(node_id, arg_id, "arg", order=idx)
+            return node_id
+
+        if isinstance(expr, LoweredLambda):
+            node_id = new_node_id()
+            graph.add_node(
+                node_id=node_id,
+                kind="LambdaIntent",
+                attrs={
+                    "params": expr.params or [],
+                    "return_type": expr.return_type,
+                },
+            )
+            if expr.body is not None:
+                body_id = build_expr(expr.body)
+                graph.add_edge(node_id, body_id, "body", order=0)
             return node_id
 
         node_id = new_node_id()

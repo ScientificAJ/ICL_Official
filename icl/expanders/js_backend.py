@@ -133,4 +133,11 @@ class JavaScriptBackend(BackendEmitter):
             args = [self._emit_expr(graph, arg_id) for arg_id in graph.child_ids(node_id, "arg")]
             return f"{callee}({', '.join(args)})"
 
+        if kind == "LambdaIntent":
+            params = node.attrs.get("params", [])
+            body_ids = graph.child_ids(node_id, "body")
+            body_src = self._emit_expr(graph, body_ids[0]) if body_ids else "null"
+            param_src = ", ".join(param["name"] for param in params)
+            return f"(({param_src}) => {body_src})"
+
         return "null"

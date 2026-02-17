@@ -1,4 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
+# Legacy filename retained for compatibility; output binary is `icl-mcp`.
 
 
 a = Analysis(
@@ -22,7 +23,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='icp-mcp',
+    name='icl-mcp',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

@@ -55,6 +55,13 @@ def build_parser() -> argparse.ArgumentParser:
     compile_parser.add_argument("--emit-sourcemap", help="Write source map JSON")
     compile_parser.add_argument("--optimize", action="store_true", help="Enable graph optimizations")
     compile_parser.add_argument("--debug", action="store_true", help="Emit debug info to stderr")
+    compile_parser.add_argument("--natural", action="store_true", help="Enable natural alias normalization.")
+    compile_parser.add_argument(
+        "--alias-mode",
+        choices=["core", "extended"],
+        default="core",
+        help="Alias normalization mode when --natural is set.",
+    )
 
     check_parser = subparsers.add_parser("check", help="Validate source through semantic analysis")
     check_parser.add_argument("input", nargs="?", help="Input .icl file")
@@ -64,6 +71,13 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         help="Plugin spec in module[:symbol] format; can be repeated.",
+    )
+    check_parser.add_argument("--natural", action="store_true", help="Enable natural alias normalization.")
+    check_parser.add_argument(
+        "--alias-mode",
+        choices=["core", "extended"],
+        default="core",
+        help="Alias normalization mode when --natural is set.",
     )
 
     explain_parser = subparsers.add_parser("explain", help="Print AST + IR + lowered + Intent Graph JSON")
@@ -82,6 +96,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=[],
         help="Custom language pack spec in module[:symbol] format; can be repeated.",
     )
+    explain_parser.add_argument("--natural", action="store_true", help="Enable natural alias normalization.")
+    explain_parser.add_argument(
+        "--alias-mode",
+        choices=["core", "extended"],
+        default="core",
+        help="Alias normalization mode when --natural is set.",
+    )
+    explain_parser.add_argument("--alias-trace", action="store_true", help="Include applied alias replacements.")
 
     compress_parser = subparsers.add_parser("compress", help="Print canonical compact ICL encoding")
     compress_parser.add_argument("input", nargs="?", help="Input .icl file")
@@ -131,6 +153,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Custom language pack spec in module[:symbol] format; can be repeated.",
     )
 
+    alias_parser = subparsers.add_parser("alias", help="Inspect natural alias mapping catalog")
+    alias_subparsers = alias_parser.add_subparsers(dest="alias_command", required=True)
+    alias_list_parser = alias_subparsers.add_parser("list", help="List natural alias mappings")
+    alias_list_parser.add_argument("--mode", choices=["core", "extended"], default="core", help="Alias mode view")
+    alias_list_parser.add_argument("--json", action="store_true", help="Emit JSON payload")
+
     serve_parser = subparsers.add_parser("serve", help="Run HTTP API server for AI/tool integrations")
     serve_parser.add_argument("--host", default="127.0.0.1", help="Bind host")
     serve_parser.add_argument("--port", type=int, default=8080, help="Bind port")
@@ -153,7 +181,11 @@ def run(argv: list[str] | None = None) -> int:
                 raise argparse.ArgumentTypeError("Provide either file input or --code, not both.")
 
             targets = _resolve_compile_targets(args.target, args.targets)
-            manager = build_plugin_manager(args.plugin)
+            manager = build_plugin_manager(
+                args.plugin,
+                natural_aliases=args.natural,
+                alias_mode=args.alias_mode,
+            )
             pack_registry = build_pack_registry(args.pack)
 
             if len(targets) == 1:
@@ -245,14 +277,22 @@ def run(argv: list[str] | None = None) -> int:
 
         if args.command == "check":
             source, filename = _resolve_source(args.input, args.code)
-            manager = build_plugin_manager(args.plugin)
+            manager = build_plugin_manager(
+                args.plugin,
+                natural_aliases=args.natural,
+                alias_mode=args.alias_mode,
+            )
             compile_source(source, filename=filename, target="python", plugin_manager=manager)
             print("OK")
             return 0
 
         if args.command == "explain":
             source, filename = _resolve_source(args.input, args.code)
-            manager = build_plugin_manager(args.plugin)
+            manager = build_plugin_manager(
+                args.plugin,
+                natural_aliases=args.natural,
+                alias_mode=args.alias_mode,
+            )
             registry = build_pack_registry(args.pack)
             payload = explain_source(
                 source,
@@ -261,6 +301,8 @@ def run(argv: list[str] | None = None) -> int:
                 plugin_manager=manager,
                 pack_registry=registry,
             )
+            if args.alias_trace:
+                payload["alias_trace"] = _alias_trace_from_metadata(manager.metadata_snapshot())
             print(json.dumps(payload, indent=2, sort_keys=True))
             return 0
 
@@ -323,6 +365,23 @@ def run(argv: list[str] | None = None) -> int:
 
             raise argparse.ArgumentTypeError(f"Unsupported contract command '{args.contract_command}'.")
 
+        if args.command == "alias":
+            from icl.alias_map import alias_catalog
+
+            if args.alias_command == "list":
+                catalog = alias_catalog(args.mode)
+                if args.json:
+                    print(json.dumps(catalog, indent=2, sort_keys=True))
+                else:
+                    for entry in catalog:
+                        aliases = ", ".join(entry["aliases"])
+                        print(
+                            f"{entry['canonical']:<8} [{entry['category']}] {entry['description']} | aliases: {aliases}"
+                        )
+                return 0
+
+            raise argparse.ArgumentTypeError(f"Unsupported alias command '{args.alias_command}'.")
+
         if args.command == "serve":
             from icl.api_server import run_http_api
 
@@ -376,6 +435,19 @@ def _resolve_compile_targets(target: str | None, targets_args: list[str]) -> lis
         seen.add(item)
         deduped.append(item)
     return deduped
+
+
+def _alias_trace_from_metadata(metadata: dict[str, object]) -> dict[str, object]:
+    payload = metadata.get("natural_aliases")
+    if not isinstance(payload, dict):
+        return {"enabled": False, "changed": False, "count": 0, "replacements": []}
+    return {
+        "enabled": True,
+        "mode": payload.get("mode", "core"),
+        "changed": bool(payload.get("changed", False)),
+        "count": int(payload.get("count", 0)),
+        "replacements": list(payload.get("replacements", [])),
+    }
 
 
 def _resolve_source(input_path: str | None, inline_code: str | None) -> tuple[str, str]:

@@ -1,36 +1,40 @@
 # Compiler Architecture (ICL v2.0)
 
 ## Pipeline
-`ICL Source -> Parser -> AST -> IR -> Lowering -> Target Pack Emit -> Scaffolder -> Output`
+`ICL Source -> Syntax Preprocess -> Parser -> AST -> IR -> Lowering -> Target Pack Emit -> Scaffolder -> Output`
 
 ## Stage Definitions
-1. Parser
+1. Syntax Preprocess
+- Optional syntax plugins can normalize source text before lexing (for example natural aliases).
+- Preprocess metadata is traceable for service/MCP consumers.
+
+2. Parser
 - Lexer + parser produce typed AST with source spans.
 
-2. AST
+3. AST
 - Source-faithful program structure.
 - Preserves language-level constructs before normalization.
 
-3. IR
+4. IR
 - Target-agnostic semantic representation.
 - Normalizes constructs so packs do not duplicate semantic logic.
 - Carries inferred type metadata and stable schema version.
 
-4. Lowering
+5. Lowering
 - Converts IR to target-shaped lowered module.
 - Applies pack feature compatibility checks.
 - Produces required helper/runtime declarations.
 
-5. Target Pack Emit
+6. Target Pack Emit
 - Converts lowered module into target source text.
 - Stable packs enforce semantic parity for contract constructs.
 - Experimental packs are best-effort and clearly labeled.
 
-6. Scaffolder
+7. Scaffolder
 - Wraps emitted source into output bundle (single file or multi-file scaffold).
 - Example: `web` target outputs `index.html`, `styles.css`, `app.js`.
 
-7. Output
+8. Output
 - Primary code output plus optional debug artifacts.
 
 ## Why IR Exists

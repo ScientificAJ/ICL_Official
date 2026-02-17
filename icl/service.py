@@ -35,10 +35,17 @@ def compile_request(payload: dict[str, Any]) -> dict[str, Any]:
     include_ir = bool(payload.get("include_ir", False))
     include_lowered = bool(payload.get("include_lowered", False))
     include_bundle = bool(payload.get("include_bundle", False))
+    include_alias_trace = bool(payload.get("include_alias_trace", False))
+    natural_aliases = bool(payload.get("natural_aliases", False))
+    alias_mode = str(payload.get("alias_mode", "core"))
     plugins = _normalize_plugins(payload.get("plugins"))
     packs = _normalize_plugins(payload.get("packs"))
 
-    manager = build_plugin_manager(plugins)
+    manager = build_plugin_manager(
+        plugins,
+        natural_aliases=natural_aliases,
+        alias_mode=alias_mode,
+    )
     pack_registry = build_pack_registry(packs)
 
     multi = compile_targets(
@@ -49,6 +56,8 @@ def compile_request(payload: dict[str, Any]) -> dict[str, Any]:
         pack_registry=pack_registry,
         optimize=optimize,
         debug=debug,
+        natural_aliases=natural_aliases,
+        alias_mode=alias_mode,
     )
 
     if len(targets) == 1:
@@ -80,6 +89,8 @@ def compile_request(payload: dict[str, Any]) -> dict[str, Any]:
                 "primary_path": emitted.bundle.primary_path,
                 "files": emitted.bundle.files,
             }
+        if include_alias_trace:
+            result["alias_trace"] = _extract_alias_trace(multi.plugin_metadata)
         if emitted.optimization is not None:
             result["optimization"] = {
                 "folded_operations": emitted.optimization.folded_operations,
@@ -129,12 +140,16 @@ def compile_request(payload: dict[str, Any]) -> dict[str, Any]:
         from icl.ir import ir_to_dict
 
         response["ir"] = ir_to_dict(multi.ir)
+    if include_alias_trace:
+        response["alias_trace"] = _extract_alias_trace(multi.plugin_metadata)
     return response
 
 
 def check_request(payload: dict[str, Any]) -> dict[str, Any]:
     """Validate source payload via parse + semantic phases."""
     source, filename = _resolve_source_payload(payload)
+    natural_aliases = bool(payload.get("natural_aliases", False))
+    alias_mode = str(payload.get("alias_mode", "core"))
     plugins = _normalize_plugins(payload.get("plugins"))
     packs = _normalize_plugins(payload.get("packs"))
 
@@ -144,6 +159,8 @@ def check_request(payload: dict[str, Any]) -> dict[str, Any]:
         target="python",
         plugin_specs=plugins,
         pack_specs=packs,
+        natural_aliases=natural_aliases,
+        alias_mode=alias_mode,
     )
 
     return {
@@ -159,13 +176,25 @@ def check_request(payload: dict[str, Any]) -> dict[str, Any]:
 def explain_request(payload: dict[str, Any]) -> dict[str, Any]:
     """Return AST, IR, lowered, graph, and source map for given payload."""
     source, filename = _resolve_source_payload(payload)
+    natural_aliases = bool(payload.get("natural_aliases", False))
+    alias_mode = str(payload.get("alias_mode", "core"))
+    include_alias_trace = bool(payload.get("include_alias_trace", False))
     plugins = _normalize_plugins(payload.get("plugins"))
     packs = _normalize_plugins(payload.get("packs"))
     target = str(payload.get("target", "python"))
 
-    manager = build_plugin_manager(plugins)
+    manager = build_plugin_manager(plugins, natural_aliases=natural_aliases, alias_mode=alias_mode)
     pack_registry = build_pack_registry(packs)
-    return explain_source(source, filename=filename, target=target, plugin_manager=manager, pack_registry=pack_registry)
+    explained = explain_source(
+        source,
+        filename=filename,
+        target=target,
+        plugin_manager=manager,
+        pack_registry=pack_registry,
+    )
+    if include_alias_trace:
+        explained["alias_trace"] = _extract_alias_trace(manager.metadata_snapshot())
+    return explained
 
 
 def compress_request(payload: dict[str, Any]) -> dict[str, Any]:
@@ -210,6 +239,10 @@ def capabilities_request(payload: dict[str, Any] | None = None) -> dict[str, Any
             for target in registry.targets(stability="experimental")
             if target not in registry.targets(stability="stable")
         ),
+        "natural_aliases": {
+            "available": True,
+            "modes": ["core", "extended"],
+        },
     }
 
 
@@ -369,6 +402,20 @@ def _normalize_plugins(value: Any) -> list[str]:
         span=None,
         hint="Use ['module:register']",
     )
+
+
+def _extract_alias_trace(plugin_metadata: dict[str, Any]) -> dict[str, Any]:
+    payload = plugin_metadata.get("natural_aliases")
+    if not isinstance(payload, dict):
+        return {"enabled": False, "changed": False, "count": 0, "replacements": []}
+
+    return {
+        "enabled": True,
+        "mode": payload.get("mode", "core"),
+        "changed": bool(payload.get("changed", False)),
+        "count": int(payload.get("count", 0)),
+        "replacements": list(payload.get("replacements", [])),
+    }
 
 
 def safe_dispatch(method: str, payload: dict[str, Any] | None = None) -> tuple[bool, dict[str, Any]]:

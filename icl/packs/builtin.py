@@ -18,6 +18,7 @@ from icl.lowering import (
     LoweredExpressionStmt,
     LoweredFunction,
     LoweredIf,
+    LoweredLambda,
     LoweredLiteral,
     LoweredLoop,
     LoweredModule,
@@ -43,6 +44,7 @@ COMMON_FEATURES = {
     "comparison": True,
     "logic": True,
     "call": True,
+    "lambda": True,
     "at_call": True,
     "typed_annotation": True,
 }
@@ -328,6 +330,11 @@ class PseudoPack(LanguagePack):
             callee = self._emit_expr(expr.callee)
             args = ", ".join(self._emit_expr(arg) for arg in expr.args or [])
             return f"{callee}({args})"
+
+        if isinstance(expr, LoweredLambda):
+            params = ", ".join(param["name"] for param in expr.params or [])
+            body = self._emit_expr(expr.body)
+            return f"(({params}) => {body})"
 
         return "null"
 

@@ -15,6 +15,7 @@ from icl.ast import (
     FunctionDefStmt,
     IdentifierExpr,
     IfStmt,
+    LambdaExpr,
     LiteralExpr,
     LoopStmt,
     MacroStmt,
@@ -48,6 +49,7 @@ class FrontendArtifacts:
     semantic: SemanticResult
     ir: IRModule
     source_map: SourceMap
+    plugin_metadata: dict[str, Any]
 
 
 @dataclass
@@ -76,6 +78,7 @@ class CompileArtifacts:
     code: str
     bundle: OutputBundle
     optimization: OptimizationReport | None = None
+    plugin_metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -88,6 +91,7 @@ class MultiTargetArtifacts:
     ir: IRModule
     source_map: SourceMap
     targets: dict[str, TargetArtifacts]
+    plugin_metadata: dict[str, Any]
 
 
 def default_plugin_manager() -> PluginManager:
@@ -109,9 +113,18 @@ def default_pack_registry() -> PackRegistry:
     return build_builtin_pack_registry()
 
 
-def build_plugin_manager(plugin_specs: list[str] | None = None) -> PluginManager:
+def build_plugin_manager(
+    plugin_specs: list[str] | None = None,
+    *,
+    natural_aliases: bool = False,
+    alias_mode: str = "core",
+) -> PluginManager:
     """Create default plugin manager and apply plugin specs."""
     manager = default_plugin_manager()
+    if natural_aliases:
+        from icl.plugins.natural_aliases import NaturalAliasPlugin
+
+        manager.register_syntax(NaturalAliasPlugin(mode=alias_mode))
     if plugin_specs:
         load_plugins(manager, plugin_specs)
     return manager
@@ -132,6 +145,8 @@ def compile_source(
     target: str = "python",
     plugin_manager: PluginManager | None = None,
     plugin_specs: list[str] | None = None,
+    natural_aliases: bool = False,
+    alias_mode: str = "core",
     pack_registry: PackRegistry | None = None,
     pack_specs: list[str] | None = None,
     optimize: bool = False,
@@ -148,6 +163,8 @@ def compile_source(
         targets=[target],
         plugin_manager=plugin_manager,
         plugin_specs=plugin_specs,
+        natural_aliases=natural_aliases,
+        alias_mode=alias_mode,
         pack_registry=pack_registry,
         pack_specs=pack_specs,
         optimize=optimize,
@@ -175,6 +192,7 @@ def compile_source(
         code=target_artifacts.code,
         bundle=target_artifacts.bundle,
         optimization=target_artifacts.optimization,
+        plugin_metadata=multi.plugin_metadata,
     )
 
 
@@ -185,6 +203,8 @@ def compile_targets(
     targets: list[str],
     plugin_manager: PluginManager | None = None,
     plugin_specs: list[str] | None = None,
+    natural_aliases: bool = False,
+    alias_mode: str = "core",
     pack_registry: PackRegistry | None = None,
     pack_specs: list[str] | None = None,
     optimize: bool = False,
@@ -192,7 +212,11 @@ def compile_targets(
 ) -> MultiTargetArtifacts:
     """Compile source once and emit for multiple targets."""
 
-    manager = plugin_manager or build_plugin_manager(plugin_specs)
+    manager = plugin_manager or build_plugin_manager(
+        plugin_specs,
+        natural_aliases=natural_aliases,
+        alias_mode=alias_mode,
+    )
     registry = pack_registry or build_pack_registry(pack_specs)
 
     frontend = _run_frontend(source, filename=filename, plugin_manager=manager)
@@ -238,6 +262,7 @@ def compile_targets(
         ir=frontend.ir,
         source_map=frontend.source_map,
         targets=target_results,
+        plugin_metadata=frontend.plugin_metadata,
     )
 
 
@@ -248,6 +273,8 @@ def compile_file(
     output_path: str | Path | None = None,
     plugin_manager: PluginManager | None = None,
     plugin_specs: list[str] | None = None,
+    natural_aliases: bool = False,
+    alias_mode: str = "core",
     pack_registry: PackRegistry | None = None,
     pack_specs: list[str] | None = None,
     optimize: bool = False,
@@ -265,6 +292,8 @@ def compile_file(
         output_path=output_path,
         plugin_manager=plugin_manager,
         plugin_specs=plugin_specs,
+        natural_aliases=natural_aliases,
+        alias_mode=alias_mode,
         pack_registry=pack_registry,
         pack_specs=pack_specs,
         optimize=optimize,
@@ -280,6 +309,8 @@ def check_source(
     filename: str = "<input>",
     plugin_manager: PluginManager | None = None,
     plugin_specs: list[str] | None = None,
+    natural_aliases: bool = False,
+    alias_mode: str = "core",
     pack_registry: PackRegistry | None = None,
 ) -> CompileArtifacts:
     """Run compiler pipeline through lowering for default python target."""
@@ -289,6 +320,8 @@ def check_source(
         target="python",
         plugin_manager=plugin_manager,
         plugin_specs=plugin_specs,
+        natural_aliases=natural_aliases,
+        alias_mode=alias_mode,
         pack_registry=pack_registry,
         optimize=False,
         debug=False,
@@ -302,6 +335,8 @@ def explain_source(
     target: str = "python",
     plugin_manager: PluginManager | None = None,
     plugin_specs: list[str] | None = None,
+    natural_aliases: bool = False,
+    alias_mode: str = "core",
     pack_registry: PackRegistry | None = None,
     pack_specs: list[str] | None = None,
 ) -> dict[str, Any]:
@@ -313,6 +348,8 @@ def explain_source(
         target=target,
         plugin_manager=plugin_manager,
         plugin_specs=plugin_specs,
+        natural_aliases=natural_aliases,
+        alias_mode=alias_mode,
         pack_registry=pack_registry,
         pack_specs=pack_specs,
         optimize=False,
@@ -337,6 +374,7 @@ def compress_source(source: str, *, filename: str = "<input>") -> str:
 
 def _run_frontend(source: str, *, filename: str, plugin_manager: PluginManager) -> FrontendArtifacts:
     prepared_source = plugin_manager.preprocess_source(source)
+    plugin_metadata = plugin_manager.metadata_snapshot()
 
     tokens = Lexer(prepared_source, filename=filename).tokenize()
     program = Parser(tokens).parse_program()
@@ -351,7 +389,14 @@ def _run_frontend(source: str, *, filename: str, plugin_manager: PluginManager) 
 
     ir = IRBuilder(semantic).build(program)
 
-    return FrontendArtifacts(tokens=tokens, program=program, semantic=semantic, ir=ir, source_map=source_map)
+    return FrontendArtifacts(
+        tokens=tokens,
+        program=program,
+        semantic=semantic,
+        ir=ir,
+        source_map=source_map,
+        plugin_metadata=plugin_metadata,
+    )
 
 
 def _emit_program_compact(program: Program) -> str:
@@ -414,6 +459,14 @@ def _emit_expr_compact(expr: Expr) -> str:
 
     if isinstance(expr, BinaryExpr):
         return f"({_emit_expr_compact(expr.left)}{expr.operator}{_emit_expr_compact(expr.right)})"
+
+    if isinstance(expr, LambdaExpr):
+        params = ",".join(
+            f"{param.name}:{param.type_hint}" if param.type_hint else param.name
+            for param in expr.params
+        )
+        suffix = f":{expr.return_type}" if expr.return_type else ""
+        return f"lam({params}){suffix}=>{_emit_expr_compact(expr.body)}"
 
     if isinstance(expr, CallExpr):
         callee = _emit_expr_compact(expr.callee)

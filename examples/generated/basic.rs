@@ -1,9 +1,9 @@
 fn add(a: f64, b: f64) -> f64 {
-    (a + b)
+    return (a + b);
 }
 
 fn main() {
-    let mut x = 4;
-    let mut y = add(x, 6);
+    let mut x: f64 = 4.0;
+    let mut y: f64 = add(x, 6.0);
     println!("{:?}", y);
 }

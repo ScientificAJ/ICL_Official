@@ -44,12 +44,14 @@ term             = factor, { ( "+" | "-" ), factor } ;
 factor           = unary, { ( "*" | "/" | "%" ), unary } ;
 unary            = ( "!" | "-" | "+" ), unary | postfix ;
 postfix          = primary, { "(", [ arguments ], ")" } ;
+lambda_expr      = "lam", "(", [ params ], ")", [ ":", IDENT ], "=>", expression ;
 
 primary          = NUMBER
                  | STRING
                  | "true"
                  | "false"
                  | IDENT
+                 | lambda_expr
                  | "@", IDENT, "(", [ arguments ], ")"
                  | "(", expression, ")" ;
 ```

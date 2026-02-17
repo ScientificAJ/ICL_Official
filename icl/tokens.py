@@ -16,6 +16,7 @@ class TokenType(Enum):
     STRING = auto()
 
     FN = auto()
+    LAM = auto()
     IF = auto()
     LOOP = auto()
     IN = auto()
@@ -60,6 +61,7 @@ class TokenType(Enum):
 
 KEYWORDS: dict[str, TokenType] = {
     "fn": TokenType.FN,
+    "lam": TokenType.LAM,
     "if": TokenType.IF,
     "loop": TokenType.LOOP,
     "in": TokenType.IN,

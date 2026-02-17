@@ -13,6 +13,7 @@ from icl.ast import (
     FunctionDefStmt,
     IdentifierExpr,
     IfStmt,
+    LambdaExpr,
     LiteralExpr,
     LoopStmt,
     MacroStmt,
@@ -284,6 +285,9 @@ class Parser:
             tok = self._previous()
             return LiteralExpr(span=tok.span, value=False)
 
+        if self._match(TokenType.LAM):
+            return self._parse_lambda_expr(self._previous())
+
         if self._match(TokenType.IDENT):
             tok = self._previous()
             return IdentifierExpr(span=tok.span, name=tok.value)
@@ -315,6 +319,33 @@ class Parser:
             span=tok.span,
             hint="Use literals, identifiers, calls, or parenthesized expressions.",
         )
+
+    def _parse_lambda_expr(self, lam_token: Token) -> LambdaExpr:
+        self._consume(TokenType.LPAR, "Expected '(' after 'lam'.")
+        params: list[Param] = []
+
+        if not self._check(TokenType.RPAR):
+            while True:
+                param_name = self._consume(TokenType.IDENT, "Expected lambda parameter name.")
+                param_type: str | None = None
+                if self._match(TokenType.COLON):
+                    param_type_tok = self._consume(TokenType.IDENT, "Expected parameter type after ':'.")
+                    param_type = param_type_tok.value
+                params.append(Param(name=param_name.value, type_hint=param_type))
+                if not self._match(TokenType.COMMA):
+                    break
+
+        self._consume(TokenType.RPAR, "Expected ')' after lambda parameters.")
+
+        return_type: str | None = None
+        if self._match(TokenType.COLON):
+            return_type_tok = self._consume(TokenType.IDENT, "Expected lambda return type after ':'.")
+            return_type = return_type_tok.value
+
+        self._consume(TokenType.ARROW, "Expected '=>' in lambda expression.")
+        body = self._parse_expression()
+        span = self._merge_spans(lam_token.span, body.span)
+        return LambdaExpr(span=span, params=params, body=body, return_type=return_type)
 
     def _is_assignment_start(self) -> bool:
         if not self._check(TokenType.IDENT):

@@ -46,6 +46,20 @@ class ServiceTests(unittest.TestCase):
         diff = diff_request({"before_graph": before, "after_graph": after})
         self.assertTrue(diff["changed_nodes"])
 
+    def test_compile_request_with_natural_aliases_and_trace(self) -> None:
+        result = compile_request(
+            {
+                "source": "mkfn add(a,b)=>a+b; prnt(add(1,2));",
+                "target": "python",
+                "natural_aliases": True,
+                "include_alias_trace": True,
+            }
+        )
+        self.assertIn("def add(a, b):", result["code"])
+        self.assertIn("print(add(1, 2))", result["code"])
+        self.assertIn("alias_trace", result)
+        self.assertGreater(result["alias_trace"]["count"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

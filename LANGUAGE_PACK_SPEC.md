@@ -29,6 +29,7 @@ Packs map lowered constructs to target syntax:
 - assignments
 - expressions
 - function definitions/calls
+- lambda expressions
 - conditionals
 - loops
 - returns

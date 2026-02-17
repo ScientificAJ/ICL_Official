@@ -27,6 +27,8 @@ Useful flags:
 - `--emit-sourcemap map.json`
 - `--optimize`
 - `--debug`
+- `--natural` (enable universal natural alias normalization)
+- `--alias-mode core|extended` (default: `core`)
 - `--plugin module[:symbol]` (repeatable)
 - `--pack module[:symbol]` (repeatable)
 
@@ -35,6 +37,7 @@ Useful flags:
 icl check input.icl
 icl check --code 'fn add(a,b)=>a+b;'
 icl check --code '#echo(1);' --plugin icl.plugins.std_macros
+icl check --code 'mkfn add(a,b)=>a+b; prnt(add(1,2));' --natural
 ```
 
 ## Explain
@@ -42,6 +45,14 @@ Prints AST + IR + lowered + graph + source map.
 ```bash
 icl explain input.icl
 icl explain input.icl --target rust
+icl explain --code 'ok := yes and not no;' --natural --alias-mode extended --alias-trace
+```
+
+## Alias Catalog
+```bash
+icl alias list
+icl alias list --mode extended
+icl alias list --mode extended --json
 ```
 
 ## Compress

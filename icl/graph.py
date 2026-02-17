@@ -14,6 +14,7 @@ from icl.ast import (
     FunctionDefStmt,
     IdentifierExpr,
     IfStmt,
+    LambdaExpr,
     LiteralExpr,
     LoopStmt,
     MacroStmt,
@@ -339,6 +340,23 @@ class IntentGraphBuilder:
             for idx, arg in enumerate(expr.args):
                 arg_id = self._build_expr(graph, arg)
                 graph.add_edge(node_id, arg_id, "arg", order=idx)
+            return node_id
+
+        if isinstance(expr, LambdaExpr):
+            node_id = self._create_node(
+                graph,
+                kind="LambdaIntent",
+                attrs={
+                    "params": [
+                        {"name": param.name, "type_hint": param.type_hint}
+                        for param in expr.params
+                    ],
+                    "return_type": expr.return_type,
+                },
+                span=expr.span,
+            )
+            body_id = self._build_expr(graph, expr.body)
+            graph.add_edge(node_id, body_id, "body", order=0)
             return node_id
 
         return self._create_node(

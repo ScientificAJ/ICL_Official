@@ -133,6 +133,15 @@ class BinaryExpr(Expr):
 
 
 @dataclass
+class LambdaExpr(Expr):
+    """Inline lambda expression."""
+
+    params: list[Param]
+    body: Expr
+    return_type: str | None = None
+
+
+@dataclass
 class CallExpr(Expr):
     """Function call expression."""
 

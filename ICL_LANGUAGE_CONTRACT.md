@@ -19,6 +19,7 @@ This file is the normative source of truth for compiler core and language packs.
 - Identifier reference
 - Unary ops: `!`, `+`, `-`
 - Binary ops: `+ - * / % == != < <= > >= && ||`
+- Lambda: `lam(args):Type => expr`
 - Calls: `name(args)` and `@name(args)`
 - Grouping: `(expr)`
 
@@ -49,6 +50,7 @@ This file is the normative source of truth for compiler core and language packs.
   - postfix call
 - Binary operations are left-associative under Pratt precedence implementation.
 - Function calls evaluate callee then args in source order.
+- Lambda expressions capture lexical scope and evaluate as first-class `Fn` values.
 
 ## 5. Truthiness Model
 - Contract-level condition type is `Bool` (or unresolved `Any` prior to specialization).
@@ -60,6 +62,8 @@ This file is the normative source of truth for compiler core and language packs.
 - `Any` is top-compatibility type.
 - Type annotations constrain inferred values.
 - Call arity is checked for resolved function symbols.
+- `lam` expressions infer as `Fn`; annotated lambda return types must match inferred body type.
+- `Fn`-typed values are callable; unresolved callable metadata returns `Any`.
 - Cross-target stable guarantee is semantic parity, not identical native type syntax.
 
 ## 7. Error Model
