@@ -7,6 +7,7 @@ from typing import Any
 
 __all__ = [
     "build_plugin_manager",
+    "dispatch_service",
     "CompileArtifacts",
     "check_source",
     "compile_file",
@@ -20,6 +21,12 @@ def build_plugin_manager(*args: Any, **kwargs: Any):
     from icl.main import build_plugin_manager as _build_plugin_manager
 
     return _build_plugin_manager(*args, **kwargs)
+
+
+def dispatch_service(*args: Any, **kwargs: Any):
+    from icl.service import dispatch as _dispatch
+
+    return _dispatch(*args, **kwargs)
 
 
 def compile_source(*args: Any, **kwargs: Any):

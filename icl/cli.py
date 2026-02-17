@@ -62,6 +62,12 @@ def build_parser() -> argparse.ArgumentParser:
     diff_parser.add_argument("before", help="Path to previous graph JSON")
     diff_parser.add_argument("after", help="Path to next graph JSON")
 
+    serve_parser = subparsers.add_parser("serve", help="Run HTTP API server for AI/tool integrations")
+    serve_parser.add_argument("--host", default="127.0.0.1", help="Bind host")
+    serve_parser.add_argument("--port", type=int, default=8080, help="Bind port")
+
+    subparsers.add_parser("agent", help="Run stdio JSON adapter for AI/tool integrations")
+
     return parser
 
 
@@ -158,6 +164,16 @@ def run(argv: list[str] | None = None) -> int:
                 )
             )
             return 0
+
+        if args.command == "serve":
+            from icl.api_server import run_http_api
+
+            return run_http_api(host=args.host, port=args.port)
+
+        if args.command == "agent":
+            from icl.agent_stdio import run_stdio
+
+            return run_stdio()
 
         raise argparse.ArgumentTypeError(f"Unsupported command '{args.command}'.")
 

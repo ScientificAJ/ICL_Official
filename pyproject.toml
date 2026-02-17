@@ -11,5 +11,13 @@ requires-python = ">=3.11"
 authors = [{ name = "ICL Team" }]
 dependencies = []
 
+[project.optional-dependencies]
+release = [
+  "build>=1.2",
+  "twine>=5.0",
+]
+
 [project.scripts]
 icl = "icl.cli:run"
+icl-api = "icl.api_server:run"
+icl-agent = "icl.agent_stdio:run"

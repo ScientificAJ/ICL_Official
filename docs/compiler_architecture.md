@@ -67,3 +67,18 @@ Each diagnostic can include file/line/column span and hint text.
 - Source map JSON (`icl/source_map.py`)
 
 These artifacts are designed for future reverse compilation and intent-level diff tooling.
+
+## Integration Adapters
+
+### Service Layer (`icl/service.py`)
+- Machine-oriented method dispatcher:
+  - `compile`, `check`, `explain`, `compress`, `diff`, `capabilities`
+- Shared by transport adapters to avoid duplicated compiler orchestration logic.
+
+### HTTP Adapter (`icl/api_server.py`)
+- Zero-dependency JSON API using `http.server`.
+- Exposes `/v1/*` endpoints for language-agnostic clients.
+
+### Stdio Adapter (`icl/agent_stdio.py`)
+- NDJSON request/response loop for AI runtimes using stdin/stdout IPC.
+- Method dispatch delegates to shared service layer.

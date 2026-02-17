@@ -23,6 +23,8 @@ Human Intent
 - Graph optimizer (constant folding + dead assignment removal).
 - Intent graph diff tooling.
 - Plugin loader for macros, syntax hooks, and custom backends.
+- Zero-dependency HTTP API for tool and agent integrations.
+- Stdio JSON adapter for agent runtimes that prefer line-based IPC.
 
 ## Install
 ```bash
@@ -39,6 +41,8 @@ icl check examples/control_flow.icl
 icl explain examples/basic.icl
 icl compile examples/basic.icl --target python --emit-graph graph.json --emit-sourcemap map.json
 icl compile examples/macros.icl --target python --plugin icl.plugins.std_macros
+icl serve --host 127.0.0.1 --port 8080
+icl agent
 ```
 
 ## Example ICL
@@ -68,5 +72,51 @@ python -m unittest discover -s tests -v
 icl compile --code '#echo(1);' --target python --plugin icl.plugins.std_macros
 ```
 
+## AI Integration Modes
+
+### 1. Python API
+```python
+from icl import compile_source
+artifacts = compile_source(\"x := 1 + 2;\", target=\"python\")
+print(artifacts.code)
+```
+
+### 2. HTTP API (`icl-api` / `icl serve`)
+Start server:
+```bash
+icl-api --host 127.0.0.1 --port 8080
+```
+
+Compile request:
+```bash
+curl -s http://127.0.0.1:8080/v1/compile \\
+  -H 'Content-Type: application/json' \\
+  -d '{\"source\":\"x := 1 + 2;\",\"target\":\"python\"}'
+```
+
+### 3. Stdio JSON Adapter (`icl-agent` / `icl agent`)
+```bash
+printf '%s\n' '{\"id\":\"1\",\"method\":\"compile\",\"params\":{\"source\":\"x := 1;\",\"target\":\"python\"}}' | icl-agent
+```
+
+Request format:
+- One JSON object per line.
+- Fields: `id`, `method`, `params`.
+
+Methods:
+- `compile`
+- `check`
+- `explain`
+- `compress`
+- `diff`
+- `capabilities`
+
+## Release Packaging
+Build distributions:
+```bash
+python -m pip install -e .[release]
+python -m build
+```
+
 ## License
-MIT (add LICENSE file if required for distribution).
+See `license.md`.

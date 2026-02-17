@@ -49,6 +49,41 @@ icl compress input.icl
 icl diff before_graph.json after_graph.json
 ```
 
+### HTTP API Server
+```bash
+icl serve --host 127.0.0.1 --port 8080
+# or:
+icl-api --host 127.0.0.1 --port 8080
+```
+
+Endpoints:
+- `GET /health`
+- `GET /v1/capabilities`
+- `POST /v1/compile`
+- `POST /v1/check`
+- `POST /v1/explain`
+- `POST /v1/compress`
+- `POST /v1/diff`
+
+Compile API example:
+```bash
+curl -s http://127.0.0.1:8080/v1/compile \
+  -H 'Content-Type: application/json' \
+  -d '{"source":"x := 1 + 2;","target":"python"}'
+```
+
+### Stdio Agent Adapter
+```bash
+icl agent
+# or:
+icl-agent
+```
+
+Line protocol:
+- One JSON request per line.
+- Request fields: `id`, `method`, `params`.
+- Response fields: `id`, `ok`, `result` or `error`.
+
 ## Exit Codes
 - `0`: success
 - `1`: compiler error
