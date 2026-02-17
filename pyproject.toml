@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "icl-lang"
-version = "0.1.0"
-description = "Intent Compression Language compiler"
+version = "2.0.0"
+description = "ICL Universal Translation Platform"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "ICL Team" }]
@@ -21,3 +21,4 @@ release = [
 icl = "icl.cli:run"
 icl-api = "icl.api_server:run"
 icl-agent = "icl.agent_stdio:run"
+icl-mcp = "icl.mcp_server:run"

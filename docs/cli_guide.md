@@ -1,94 +1,100 @@
-# CLI Usage Guide
+# CLI Usage Guide (ICL v2)
 
 ## Install
 ```bash
 python -m pip install -e .
 ```
 
-## Commands
-
-### Compile
+## Compile
+### Single Target
 ```bash
 icl compile input.icl --target python
-icl compile input.icl --target js -o out.js
-icl compile input.icl --target rust -o out.rs
-icl compile --code 'x := 1 + 2;' --target python
+icl compile --code 'x := 1 + 2;' --target js
 ```
 
+### Multi-Target
+```bash
+icl compile input.icl --targets python,js,rust,web -o out
+icl compile --code 'x := 1;' --targets python --targets js
+```
+
+Notes:
+- With `-o <dir>`, each target is written as runnable bundle files under `<dir>/<target>/`.
+- Without `-o`, multi-target output is JSON bundles (`primary_path` + `files`) for each target.
+
 Useful flags:
-- `--emit-graph graph.json`
+- `--emit-graph graph.json` (single target)
 - `--emit-sourcemap map.json`
 - `--optimize`
 - `--debug`
-- `--plugin icl.plugins.std_macros` (repeatable)
+- `--plugin module[:symbol]` (repeatable)
+- `--pack module[:symbol]` (repeatable)
 
-Plugin spec format:
-- `module` (loads `module:register`)
-- `module:symbol` (loads specific callable/object)
-
-### Check (syntax + semantic)
+## Check
 ```bash
 icl check input.icl
 icl check --code 'fn add(a,b)=>a+b;'
 icl check --code '#echo(1);' --plugin icl.plugins.std_macros
 ```
 
-### Explain (AST + graph JSON)
+## Explain
+Prints AST + IR + lowered + graph + source map.
 ```bash
 icl explain input.icl
-icl explain input.icl --plugin icl.plugins.std_macros
+icl explain input.icl --target rust
 ```
 
-### Compress (canonical compact ICL)
+## Compress
 ```bash
 icl compress input.icl
 ```
 
-### Intent Graph Diff
+## Diff
 ```bash
 icl diff before_graph.json after_graph.json
 ```
 
-### HTTP API Server
+## Pack Commands
+```bash
+icl pack list
+icl pack list --stability stable
+icl pack validate
+icl pack validate --target web
+```
+
+## Contract Tests
+```bash
+# stable packs only
+icl contract test
+
+# include experimental packs
+icl contract test --all
+
+# specific targets
+icl contract test --target python --target web
+```
+
+Contract semantics:
+- Stable packs must pass full required feature coverage.
+- Declared unsupported features must fail explicitly with `LOW001`.
+
+## HTTP API
 ```bash
 icl serve --host 127.0.0.1 --port 8080
-# or:
-icl-api --host 127.0.0.1 --port 8080
 ```
 
-Endpoints:
-- `GET /health`
-- `GET /v1/capabilities`
-- `POST /v1/compile`
-- `POST /v1/check`
-- `POST /v1/explain`
-- `POST /v1/compress`
-- `POST /v1/diff`
-
-Compile API example:
-```bash
-curl -s http://127.0.0.1:8080/v1/compile \
-  -H 'Content-Type: application/json' \
-  -d '{"source":"x := 1 + 2;","target":"python"}'
-```
-
-### Stdio Agent Adapter
+## Stdio Adapter
 ```bash
 icl agent
-# or:
-icl-agent
 ```
 
-Line protocol:
-- One JSON request per line.
-- Request fields: `id`, `method`, `params`.
-- Response fields: `id`, `ok`, `result` or `error`.
+## MCP Server
+```bash
+icl mcp --root /home/aru/ICL
+```
 
 ## Exit Codes
 - `0`: success
 - `1`: compiler error
 - `2`: CLI usage error
 - `3`: internal error
-
-## Debug Mode
-`--debug` prints token/node/edge counts and optimization stats to stderr.

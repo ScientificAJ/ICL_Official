@@ -23,6 +23,16 @@ class ServiceTests(unittest.TestCase):
         )
         self.assertIn("print(5);", result["code"])
 
+    def test_compile_request_multi_target_returns_bundles(self) -> None:
+        result = compile_request({"source": "x := 1; @print(x);", "targets": ["python", "web"]})
+        self.assertIn("outputs", result)
+        self.assertIn("python", result["outputs"])
+        self.assertIn("web", result["outputs"])
+        self.assertIn("bundle", result["outputs"]["python"])
+        self.assertIn("bundle", result["outputs"]["web"])
+        self.assertIn("main.py", result["outputs"]["python"]["bundle"]["files"])
+        self.assertIn("index.html", result["outputs"]["web"]["bundle"]["files"])
+
     def test_capabilities_request(self) -> None:
         caps = capabilities_request({})
         self.assertIn("compile", caps["methods"])

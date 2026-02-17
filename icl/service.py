@@ -11,59 +11,140 @@ from typing import Any, Callable
 
 from icl.errors import CLIError, CompilerError
 from icl.graph import IntentGraph, diff_graphs
-from icl.main import build_plugin_manager, compile_source, compress_source, explain_source
+from icl.main import (
+    build_pack_registry,
+    build_plugin_manager,
+    compile_source,
+    compile_targets,
+    compress_source,
+    default_pack_registry,
+    explain_source,
+)
 from icl.serialization import graph_from_json
 
 
 def compile_request(payload: dict[str, Any]) -> dict[str, Any]:
     """Compile source payload into target code and optional artifacts."""
     source, filename = _resolve_source_payload(payload)
-    target = str(payload.get("target", "python"))
+    targets = _resolve_targets(payload)
+
     optimize = bool(payload.get("optimize", False))
     debug = bool(payload.get("debug", False))
     include_graph = bool(payload.get("include_graph", False))
     include_source_map = bool(payload.get("include_source_map", False))
+    include_ir = bool(payload.get("include_ir", False))
+    include_lowered = bool(payload.get("include_lowered", False))
+    include_bundle = bool(payload.get("include_bundle", False))
     plugins = _normalize_plugins(payload.get("plugins"))
+    packs = _normalize_plugins(payload.get("packs"))
 
     manager = build_plugin_manager(plugins)
-    artifacts = compile_source(
+    pack_registry = build_pack_registry(packs)
+
+    multi = compile_targets(
         source,
         filename=filename,
-        target=target,
+        targets=targets,
         plugin_manager=manager,
+        pack_registry=pack_registry,
         optimize=optimize,
         debug=debug,
     )
 
-    result: dict[str, Any] = {
-        "target": target,
-        "code": artifacts.code,
+    if len(targets) == 1:
+        target = targets[0]
+        emitted = multi.targets[target]
+        result: dict[str, Any] = {
+            "target": target,
+            "code": emitted.code,
+            "metrics": {
+                "tokens": len(multi.tokens),
+                "nodes": len(emitted.graph.nodes),
+                "edges": len(emitted.graph.edges),
+            },
+        }
+        if include_graph:
+            result["graph"] = emitted.graph.to_dict()
+        if include_source_map:
+            result["source_map"] = multi.source_map.to_dict()
+        if include_ir:
+            from icl.ir import ir_to_dict
+
+            result["ir"] = ir_to_dict(multi.ir)
+        if include_lowered:
+            from icl.lowering import lowered_to_dict
+
+            result["lowered"] = lowered_to_dict(emitted.lowered)
+        if include_bundle:
+            result["bundle"] = {
+                "primary_path": emitted.bundle.primary_path,
+                "files": emitted.bundle.files,
+            }
+        if emitted.optimization is not None:
+            result["optimization"] = {
+                "folded_operations": emitted.optimization.folded_operations,
+                "removed_assignments": emitted.optimization.removed_assignments,
+                "notes": emitted.optimization.notes,
+            }
+        return result
+
+    outputs: dict[str, Any] = {}
+    for target in targets:
+        emitted = multi.targets[target]
+        payload_item: dict[str, Any] = {
+            "code": emitted.code,
+            "metrics": {
+                "nodes": len(emitted.graph.nodes),
+                "edges": len(emitted.graph.edges),
+            },
+            "bundle": {
+                "primary_path": emitted.bundle.primary_path,
+                "files": emitted.bundle.files,
+            },
+        }
+        if include_graph:
+            payload_item["graph"] = emitted.graph.to_dict()
+        if include_lowered:
+            from icl.lowering import lowered_to_dict
+
+            payload_item["lowered"] = lowered_to_dict(emitted.lowered)
+        if emitted.optimization is not None:
+            payload_item["optimization"] = {
+                "folded_operations": emitted.optimization.folded_operations,
+                "removed_assignments": emitted.optimization.removed_assignments,
+                "notes": emitted.optimization.notes,
+            }
+        outputs[target] = payload_item
+
+    response: dict[str, Any] = {
+        "targets": targets,
+        "outputs": outputs,
         "metrics": {
-            "tokens": len(artifacts.tokens),
-            "nodes": len(artifacts.graph.nodes),
-            "edges": len(artifacts.graph.edges),
+            "tokens": len(multi.tokens),
         },
     }
-    if include_graph:
-        result["graph"] = artifacts.graph.to_dict()
     if include_source_map:
-        result["source_map"] = artifacts.source_map.to_dict()
-    if artifacts.optimization is not None:
-        result["optimization"] = {
-            "folded_operations": artifacts.optimization.folded_operations,
-            "removed_assignments": artifacts.optimization.removed_assignments,
-            "notes": artifacts.optimization.notes,
-        }
-    return result
+        response["source_map"] = multi.source_map.to_dict()
+    if include_ir:
+        from icl.ir import ir_to_dict
+
+        response["ir"] = ir_to_dict(multi.ir)
+    return response
 
 
 def check_request(payload: dict[str, Any]) -> dict[str, Any]:
     """Validate source payload via parse + semantic phases."""
     source, filename = _resolve_source_payload(payload)
     plugins = _normalize_plugins(payload.get("plugins"))
+    packs = _normalize_plugins(payload.get("packs"))
 
-    manager = build_plugin_manager(plugins)
-    artifacts = compile_source(source, filename=filename, target="python", plugin_manager=manager)
+    artifacts = compile_source(
+        source,
+        filename=filename,
+        target="python",
+        plugin_specs=plugins,
+        pack_specs=packs,
+    )
 
     return {
         "ok": True,
@@ -76,12 +157,15 @@ def check_request(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def explain_request(payload: dict[str, Any]) -> dict[str, Any]:
-    """Return AST, graph, and source map for given payload."""
+    """Return AST, IR, lowered, graph, and source map for given payload."""
     source, filename = _resolve_source_payload(payload)
     plugins = _normalize_plugins(payload.get("plugins"))
+    packs = _normalize_plugins(payload.get("packs"))
+    target = str(payload.get("target", "python"))
 
     manager = build_plugin_manager(plugins)
-    return explain_source(source, filename=filename, plugin_manager=manager)
+    pack_registry = build_pack_registry(packs)
+    return explain_source(source, filename=filename, target=target, plugin_manager=manager, pack_registry=pack_registry)
 
 
 def compress_request(payload: dict[str, Any]) -> dict[str, Any]:
@@ -108,12 +192,24 @@ def diff_request(payload: dict[str, Any]) -> dict[str, Any]:
 
 def capabilities_request(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     """Return service capability metadata for automation clients."""
-    manager = build_plugin_manager([])
+    registry = default_pack_registry()
     return {
         "service": "icl",
-        "version": "0.1.0",
-        "methods": ["compile", "check", "explain", "compress", "diff", "capabilities"],
-        "targets": manager.available_backends(),
+        "version": "2.0.0",
+        "methods": [
+            "compile",
+            "check",
+            "explain",
+            "compress",
+            "diff",
+            "capabilities",
+        ],
+        "targets": registry.targets(stability="stable"),
+        "experimental_targets": sorted(
+            target
+            for target in registry.targets(stability="experimental")
+            if target not in registry.targets(stability="stable")
+        ),
     }
 
 
@@ -175,6 +271,45 @@ def _resolve_source_payload(payload: dict[str, Any]) -> tuple[str, str]:
     )
 
 
+def _resolve_targets(payload: dict[str, Any]) -> list[str]:
+    target = payload.get("target")
+    targets = payload.get("targets")
+
+    if target is not None and targets is not None:
+        raise CLIError(
+            code="SRV010",
+            message="Provide only one of 'target' or 'targets'.",
+            span=None,
+            hint="Use target for single output, targets for multi-target compile.",
+        )
+
+    if targets is not None:
+        if not isinstance(targets, list):
+            raise CLIError(
+                code="SRV011",
+                message="'targets' must be a list of target names.",
+                span=None,
+                hint="Example: targets=['python','js']",
+            )
+        normalized = [str(item) for item in targets if str(item).strip()]
+        if not normalized:
+            raise CLIError(
+                code="SRV012",
+                message="'targets' cannot be empty.",
+                span=None,
+                hint="Provide at least one target.",
+            )
+        return normalized
+
+    if target is not None:
+        normalized_target = str(target).strip()
+        if not normalized_target:
+            raise CLIError(code="SRV013", message="'target' cannot be empty.", span=None, hint="Set target value.")
+        return [normalized_target]
+
+    return ["python"]
+
+
 def _resolve_graph(payload: dict[str, Any], key_prefix: str) -> IntentGraph:
     graph_obj = payload.get(f"{key_prefix}_graph")
     graph_path = payload.get(f"{key_prefix}_path")
@@ -230,9 +365,9 @@ def _normalize_plugins(value: Any) -> list[str]:
         return normalized
     raise CLIError(
         code="SRV009",
-        message="'plugins' must be a string or list of strings.",
+        message="'plugins'/'packs' must be a string or list of strings.",
         span=None,
-        hint="Use plugins: ['module:register']",
+        hint="Use ['module:register']",
     )
 
 

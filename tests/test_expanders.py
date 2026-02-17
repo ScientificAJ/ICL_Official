@@ -34,8 +34,8 @@ class ExpanderTests(unittest.TestCase):
         code = artifacts.code
         self.assertIn('fn add(a: f64, b: f64) -> f64 {', code)
         self.assertIn('fn main() {', code)
-        self.assertIn('let mut x = 1;', code)
-        self.assertIn('for i in (0 as i64)..(3 as i64) {', code)
+        self.assertIn('let mut x: f64 = 1.0;', code)
+        self.assertIn('for i in ((0.0 as i64))..((3.0 as i64)) {', code)
 
 
 if __name__ == '__main__':

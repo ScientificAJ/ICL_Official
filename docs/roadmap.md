@@ -1,16 +1,16 @@
-# Roadmap
+# Roadmap (Post v2.0)
 
 ## Near Term
-- Add richer type algebra (unions, generic symbolic kinds).
-- Add source-level formatting/linting for canonical ICL style.
-- Improve parse recovery with grouped diagnostics.
+- Promote selected experimental packs to beta through contract coverage.
+- Add richer symbolic type algebra (unions, generics).
+- Add lowering trace visualizer and IR diff tools.
 
 ## Mid Term
-- Add backend for Rust and C with feature-gated emission.
-- Expand optimizer passes (CFG simplification, copy propagation).
-- Introduce graph schema migration/version compatibility tooling.
+- Add pack-level runtime test harnesses.
+- Add reversible target-to-ICL subset tooling.
+- Add pack marketplace metadata and signed pack manifests.
 
 ## Long Term
-- Intent-preserving reverse compiler from target code to ICL subset.
-- AI-assisted template expansion plugins with deterministic fallback.
 - Constraint-driven synthesis from natural language intent into ICL.
+- Verified lowering rules for stronger static targets.
+- Automated semantic parity scoring across pack ecosystems.

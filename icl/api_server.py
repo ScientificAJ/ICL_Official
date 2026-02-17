@@ -14,7 +14,7 @@ from icl.service import safe_dispatch
 class ICLAPIHandler(BaseHTTPRequestHandler):
     """HTTP handler exposing ICL service methods over JSON."""
 
-    server_version = "ICLHTTP/0.1"
+    server_version = "ICLHTTP/2.0"
 
     def do_GET(self) -> None:  # noqa: N802
         if self.path == "/health":

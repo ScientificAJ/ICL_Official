@@ -61,6 +61,11 @@ class CLITests(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
         self.assertIn('fn main() {', result.stdout)
 
+    def test_compile_web_requires_directory_for_multifile_output(self) -> None:
+        result = run_cli('compile', '--code', '@print(1);', '--target', 'web', '--output', 'out.js')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('CLI010', result.stderr)
+
 
 if __name__ == '__main__':
     unittest.main()
