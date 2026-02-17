@@ -1,3 +1,7 @@
+function print(value) {
+  console.log(value);
+}
+
 function clamp(v, lo, hi) {
     if ((v < lo)) {
         return lo;

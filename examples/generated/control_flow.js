@@ -1,3 +1,7 @@
+function print(value) {
+  console.log(value);
+}
+
 let counter = 0;
 for (let i = 0; i < 5; i++) {
     counter = (counter + i);

@@ -1,0 +1,250 @@
+* Getting build dependencies for sdist...
+running egg_info
+writing icl_lang.egg-info/PKG-INFO
+writing dependency_links to icl_lang.egg-info/dependency_links.txt
+writing entry points to icl_lang.egg-info/entry_points.txt
+writing requirements to icl_lang.egg-info/requires.txt
+writing top-level names to icl_lang.egg-info/top_level.txt
+reading manifest file 'icl_lang.egg-info/SOURCES.txt'
+writing manifest file 'icl_lang.egg-info/SOURCES.txt'
+* Building sdist...
+running sdist
+running egg_info
+writing icl_lang.egg-info/PKG-INFO
+writing dependency_links to icl_lang.egg-info/dependency_links.txt
+writing entry points to icl_lang.egg-info/entry_points.txt
+writing requirements to icl_lang.egg-info/requires.txt
+writing top-level names to icl_lang.egg-info/top_level.txt
+reading manifest file 'icl_lang.egg-info/SOURCES.txt'
+writing manifest file 'icl_lang.egg-info/SOURCES.txt'
+running check
+creating icl_lang-2.0.0
+creating icl_lang-2.0.0/icl
+creating icl_lang-2.0.0/icl/expanders
+creating icl_lang-2.0.0/icl/packs
+creating icl_lang-2.0.0/icl/plugins
+creating icl_lang-2.0.0/icl_lang.egg-info
+creating icl_lang-2.0.0/tests
+copying files to icl_lang-2.0.0...
+copying README.md -> icl_lang-2.0.0
+copying pyproject.toml -> icl_lang-2.0.0
+copying icl/__init__.py -> icl_lang-2.0.0/icl
+copying icl/agent_stdio.py -> icl_lang-2.0.0/icl
+copying icl/alias_map.py -> icl_lang-2.0.0/icl
+copying icl/api_server.py -> icl_lang-2.0.0/icl
+copying icl/ast.py -> icl_lang-2.0.0/icl
+copying icl/cli.py -> icl_lang-2.0.0/icl
+copying icl/contract_tests.py -> icl_lang-2.0.0/icl
+copying icl/errors.py -> icl_lang-2.0.0/icl
+copying icl/graph.py -> icl_lang-2.0.0/icl
+copying icl/ir.py -> icl_lang-2.0.0/icl
+copying icl/language_pack.py -> icl_lang-2.0.0/icl
+copying icl/lexer.py -> icl_lang-2.0.0/icl
+copying icl/lowering.py -> icl_lang-2.0.0/icl
+copying icl/main.py -> icl_lang-2.0.0/icl
+copying icl/mcp_catalog.py -> icl_lang-2.0.0/icl
+copying icl/mcp_errors.py -> icl_lang-2.0.0/icl
+copying icl/mcp_policy.py -> icl_lang-2.0.0/icl
+copying icl/mcp_server.py -> icl_lang-2.0.0/icl
+copying icl/optimize.py -> icl_lang-2.0.0/icl
+copying icl/parser.py -> icl_lang-2.0.0/icl
+copying icl/plugin.py -> icl_lang-2.0.0/icl
+copying icl/scaffolder.py -> icl_lang-2.0.0/icl
+copying icl/semantic.py -> icl_lang-2.0.0/icl
+copying icl/serialization.py -> icl_lang-2.0.0/icl
+copying icl/service.py -> icl_lang-2.0.0/icl
+copying icl/source_map.py -> icl_lang-2.0.0/icl
+copying icl/tokens.py -> icl_lang-2.0.0/icl
+copying icl/expanders/__init__.py -> icl_lang-2.0.0/icl/expanders
+copying icl/expanders/base.py -> icl_lang-2.0.0/icl/expanders
+copying icl/expanders/js_backend.py -> icl_lang-2.0.0/icl/expanders
+copying icl/expanders/python_backend.py -> icl_lang-2.0.0/icl/expanders
+copying icl/expanders/rust_backend.py -> icl_lang-2.0.0/icl/expanders
+copying icl/packs/__init__.py -> icl_lang-2.0.0/icl/packs
+copying icl/packs/builtin.py -> icl_lang-2.0.0/icl/packs
+copying icl/plugins/__init__.py -> icl_lang-2.0.0/icl/plugins
+copying icl/plugins/natural_aliases.py -> icl_lang-2.0.0/icl/plugins
+copying icl/plugins/std_macros.py -> icl_lang-2.0.0/icl/plugins
+copying icl_lang.egg-info/PKG-INFO -> icl_lang-2.0.0/icl_lang.egg-info
+copying icl_lang.egg-info/SOURCES.txt -> icl_lang-2.0.0/icl_lang.egg-info
+copying icl_lang.egg-info/dependency_links.txt -> icl_lang-2.0.0/icl_lang.egg-info
+copying icl_lang.egg-info/entry_points.txt -> icl_lang-2.0.0/icl_lang.egg-info
+copying icl_lang.egg-info/requires.txt -> icl_lang-2.0.0/icl_lang.egg-info
+copying icl_lang.egg-info/top_level.txt -> icl_lang-2.0.0/icl_lang.egg-info
+copying tests/test_agent_stdio.py -> icl_lang-2.0.0/tests
+copying tests/test_aliases.py -> icl_lang-2.0.0/tests
+copying tests/test_api_server.py -> icl_lang-2.0.0/tests
+copying tests/test_cli.py -> icl_lang-2.0.0/tests
+copying tests/test_contract_matrix.py -> icl_lang-2.0.0/tests
+copying tests/test_expanders.py -> icl_lang-2.0.0/tests
+copying tests/test_golden_programs.py -> icl_lang-2.0.0/tests
+copying tests/test_graph.py -> icl_lang-2.0.0/tests
+copying tests/test_integration.py -> icl_lang-2.0.0/tests
+copying tests/test_lexer.py -> icl_lang-2.0.0/tests
+copying tests/test_mcp_server.py -> icl_lang-2.0.0/tests
+copying tests/test_parser.py -> icl_lang-2.0.0/tests
+copying tests/test_plugins.py -> icl_lang-2.0.0/tests
+copying tests/test_semantic.py -> icl_lang-2.0.0/tests
+copying tests/test_service.py -> icl_lang-2.0.0/tests
+copying tests/test_v2_pipeline.py -> icl_lang-2.0.0/tests
+copying icl_lang.egg-info/SOURCES.txt -> icl_lang-2.0.0/icl_lang.egg-info
+Writing icl_lang-2.0.0/setup.cfg
+Creating tar archive
+removing 'icl_lang-2.0.0' (and everything under it)
+* Building wheel from sdist
+* Getting build dependencies for wheel...
+running egg_info
+writing icl_lang.egg-info/PKG-INFO
+writing dependency_links to icl_lang.egg-info/dependency_links.txt
+writing entry points to icl_lang.egg-info/entry_points.txt
+writing requirements to icl_lang.egg-info/requires.txt
+writing top-level names to icl_lang.egg-info/top_level.txt
+reading manifest file 'icl_lang.egg-info/SOURCES.txt'
+writing manifest file 'icl_lang.egg-info/SOURCES.txt'
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build/lib/icl
+copying icl/mcp_catalog.py -> build/lib/icl
+copying icl/mcp_policy.py -> build/lib/icl
+copying icl/plugin.py -> build/lib/icl
+copying icl/main.py -> build/lib/icl
+copying icl/language_pack.py -> build/lib/icl
+copying icl/lexer.py -> build/lib/icl
+copying icl/scaffolder.py -> build/lib/icl
+copying icl/service.py -> build/lib/icl
+copying icl/alias_map.py -> build/lib/icl
+copying icl/semantic.py -> build/lib/icl
+copying icl/serialization.py -> build/lib/icl
+copying icl/source_map.py -> build/lib/icl
+copying icl/lowering.py -> build/lib/icl
+copying icl/tokens.py -> build/lib/icl
+copying icl/cli.py -> build/lib/icl
+copying icl/parser.py -> build/lib/icl
+copying icl/contract_tests.py -> build/lib/icl
+copying icl/api_server.py -> build/lib/icl
+copying icl/ast.py -> build/lib/icl
+copying icl/ir.py -> build/lib/icl
+copying icl/graph.py -> build/lib/icl
+copying icl/mcp_errors.py -> build/lib/icl
+copying icl/__init__.py -> build/lib/icl
+copying icl/agent_stdio.py -> build/lib/icl
+copying icl/mcp_server.py -> build/lib/icl
+copying icl/errors.py -> build/lib/icl
+copying icl/optimize.py -> build/lib/icl
+creating build/lib/icl/expanders
+copying icl/expanders/js_backend.py -> build/lib/icl/expanders
+copying icl/expanders/base.py -> build/lib/icl/expanders
+copying icl/expanders/python_backend.py -> build/lib/icl/expanders
+copying icl/expanders/__init__.py -> build/lib/icl/expanders
+copying icl/expanders/rust_backend.py -> build/lib/icl/expanders
+creating build/lib/icl/packs
+copying icl/packs/builtin.py -> build/lib/icl/packs
+copying icl/packs/__init__.py -> build/lib/icl/packs
+creating build/lib/icl/plugins
+copying icl/plugins/std_macros.py -> build/lib/icl/plugins
+copying icl/plugins/__init__.py -> build/lib/icl/plugins
+copying icl/plugins/natural_aliases.py -> build/lib/icl/plugins
+running egg_info
+writing icl_lang.egg-info/PKG-INFO
+writing dependency_links to icl_lang.egg-info/dependency_links.txt
+writing entry points to icl_lang.egg-info/entry_points.txt
+writing requirements to icl_lang.egg-info/requires.txt
+writing top-level names to icl_lang.egg-info/top_level.txt
+reading manifest file 'icl_lang.egg-info/SOURCES.txt'
+writing manifest file 'icl_lang.egg-info/SOURCES.txt'
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64/wheel
+creating build/bdist.linux-x86_64/wheel/icl
+copying build/lib/icl/mcp_catalog.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/mcp_policy.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/plugin.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/main.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/language_pack.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/lexer.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/scaffolder.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/service.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/alias_map.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/semantic.py -> build/bdist.linux-x86_64/wheel/./icl
+creating build/bdist.linux-x86_64/wheel/icl/expanders
+copying build/lib/icl/expanders/js_backend.py -> build/bdist.linux-x86_64/wheel/./icl/expanders
+copying build/lib/icl/expanders/base.py -> build/bdist.linux-x86_64/wheel/./icl/expanders
+copying build/lib/icl/expanders/python_backend.py -> build/bdist.linux-x86_64/wheel/./icl/expanders
+copying build/lib/icl/expanders/__init__.py -> build/bdist.linux-x86_64/wheel/./icl/expanders
+copying build/lib/icl/expanders/rust_backend.py -> build/bdist.linux-x86_64/wheel/./icl/expanders
+copying build/lib/icl/serialization.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/source_map.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/lowering.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/tokens.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/cli.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/parser.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/contract_tests.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/api_server.py -> build/bdist.linux-x86_64/wheel/./icl
+creating build/bdist.linux-x86_64/wheel/icl/packs
+copying build/lib/icl/packs/builtin.py -> build/bdist.linux-x86_64/wheel/./icl/packs
+copying build/lib/icl/packs/__init__.py -> build/bdist.linux-x86_64/wheel/./icl/packs
+creating build/bdist.linux-x86_64/wheel/icl/plugins
+copying build/lib/icl/plugins/std_macros.py -> build/bdist.linux-x86_64/wheel/./icl/plugins
+copying build/lib/icl/plugins/__init__.py -> build/bdist.linux-x86_64/wheel/./icl/plugins
+copying build/lib/icl/plugins/natural_aliases.py -> build/bdist.linux-x86_64/wheel/./icl/plugins
+copying build/lib/icl/ast.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/ir.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/graph.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/mcp_errors.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/__init__.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/agent_stdio.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/mcp_server.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/errors.py -> build/bdist.linux-x86_64/wheel/./icl
+copying build/lib/icl/optimize.py -> build/bdist.linux-x86_64/wheel/./icl
+running install_egg_info
+Copying icl_lang.egg-info to build/bdist.linux-x86_64/wheel/./icl_lang-2.0.0-py3.11.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/icl_lang-2.0.0.dist-info/WHEEL
+creating '/home/aru/ICL/dist/.tmp-2os43z2e/icl_lang-2.0.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'icl/__init__.py'
+adding 'icl/agent_stdio.py'
+adding 'icl/alias_map.py'
+adding 'icl/api_server.py'
+adding 'icl/ast.py'
+adding 'icl/cli.py'
+adding 'icl/contract_tests.py'
+adding 'icl/errors.py'
+adding 'icl/graph.py'
+adding 'icl/ir.py'
+adding 'icl/language_pack.py'
+adding 'icl/lexer.py'
+adding 'icl/lowering.py'
+adding 'icl/main.py'
+adding 'icl/mcp_catalog.py'
+adding 'icl/mcp_errors.py'
+adding 'icl/mcp_policy.py'
+adding 'icl/mcp_server.py'
+adding 'icl/optimize.py'
+adding 'icl/parser.py'
+adding 'icl/plugin.py'
+adding 'icl/scaffolder.py'
+adding 'icl/semantic.py'
+adding 'icl/serialization.py'
+adding 'icl/service.py'
+adding 'icl/source_map.py'
+adding 'icl/tokens.py'
+adding 'icl/expanders/__init__.py'
+adding 'icl/expanders/base.py'
+adding 'icl/expanders/js_backend.py'
+adding 'icl/expanders/python_backend.py'
+adding 'icl/expanders/rust_backend.py'
+adding 'icl/packs/__init__.py'
+adding 'icl/packs/builtin.py'
+adding 'icl/plugins/__init__.py'
+adding 'icl/plugins/natural_aliases.py'
+adding 'icl/plugins/std_macros.py'
+adding 'icl_lang-2.0.0.dist-info/METADATA'
+adding 'icl_lang-2.0.0.dist-info/WHEEL'
+adding 'icl_lang-2.0.0.dist-info/entry_points.txt'
+adding 'icl_lang-2.0.0.dist-info/top_level.txt'
+adding 'icl_lang-2.0.0.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
+Successfully built icl_lang-2.0.0.tar.gz and icl_lang-2.0.0-py3-none-any.whl

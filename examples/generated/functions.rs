@@ -11,6 +11,6 @@ fn clamp(v: f64, lo: f64, hi: f64) -> f64 {
 }
 
 fn main() {
-    let mut result = clamp(10, 0, 5);
+    let mut result: f64 = clamp(10.0, 0.0, 5.0);
     println!("{:?}", result);
 }

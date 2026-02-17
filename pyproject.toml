@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "icl-lang"
+version = "2.0.0"
+description = "ICL Universal Translation Platform"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "ICL Team" }]
+dependencies = []
+
+[project.optional-dependencies]
+release = [
+  "build>=1.2",
+  "twine>=5.0",
+]
+
+[project.scripts]
+icl = "icl.cli:run"
+icl-api = "icl.api_server:run"
+icl-agent = "icl.agent_stdio:run"
+icl-mcp = "icl.mcp_server:run"
+
+[tool.setuptools.packages.find]
+include = ["icl*"]

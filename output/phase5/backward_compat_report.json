@@ -1,0 +1,155 @@
+{
+  "examples": {
+    "basic": {
+      "plugins": [],
+      "targets": {
+        "js": {
+          "bundle_primary": "main.js",
+          "code_len": 132,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "python": {
+          "bundle_primary": "main.py",
+          "code_len": 63,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "rust": {
+          "bundle_primary": "main.rs",
+          "code_len": 154,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "web": {
+          "bundle_primary": "app.js",
+          "code_len": 272,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": null,
+          "runnable_ok": null
+        }
+      }
+    },
+    "control_flow": {
+      "plugins": [],
+      "targets": {
+        "js": {
+          "bundle_primary": "main.js",
+          "code_len": 193,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "python": {
+          "bundle_primary": "main.py",
+          "code_len": 118,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "rust": {
+          "bundle_primary": "main.rs",
+          "code_len": 250,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "web": {
+          "bundle_primary": "app.js",
+          "code_len": 333,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": null,
+          "runnable_ok": null
+        }
+      }
+    },
+    "functions": {
+      "plugins": [],
+      "targets": {
+        "js": {
+          "bundle_primary": "main.js",
+          "code_len": 278,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "python": {
+          "bundle_primary": "main.py",
+          "code_len": 184,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "rust": {
+          "bundle_primary": "main.rs",
+          "code_len": 290,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "web": {
+          "bundle_primary": "app.js",
+          "code_len": 418,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": null,
+          "runnable_ok": null
+        }
+      }
+    },
+    "macros": {
+      "plugins": [
+        "icl.plugins.std_macros"
+      ],
+      "targets": {
+        "js": {
+          "bundle_primary": "main.js",
+          "code_len": 109,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "python": {
+          "bundle_primary": "main.py",
+          "code_len": 57,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "rust": {
+          "bundle_primary": "main.rs",
+          "code_len": 147,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": true,
+          "runnable_ok": true
+        },
+        "web": {
+          "bundle_primary": "app.js",
+          "code_len": 249,
+          "compile_ok": true,
+          "error": null,
+          "generated_match": null,
+          "runnable_ok": null
+        }
+      }
+    }
+  },
+  "ok": true
+}

@@ -1,175 +1,176 @@
-# ICL_Official
+# ICL — Universal Translation Platform (v2)
 
-Consumer-ready binary MCP distribution for ICL.
+## Execution Rules (For Human and AI Contributors)
+- Do NOT implement before planning documents are complete.
+- Do NOT modify compiler core until IR design is finalized.
+- Do NOT add language packs before migration strategy is defined.
+- Do NOT mark any language pack stable without passing contract tests.
+- All implementation must follow defined architecture strictly.
+- If a required language runtime/compiler is missing, install it when permitted; otherwise ask your mentor to install or approve it.
 
-This repo ships:
-- Executable MCP server
-- Language docs/manuals
-- Example `.icl` programs and generated outputs
+## Identity
+ICL is a universal translation platform with deterministic semantics:
+- Intent DSL for compact authoring.
+- Compiler pipeline with explicit IR and lowering.
+- Language pack system for multi-target emission and scaffolding.
 
-It intentionally does not ship the full compiler source tree.
+## Compiler Pipeline
 
-## Contents
-- `bin/icl-mcp` (Linux x86_64 executable, canonical)
-- `bin/icp-mcp` (compatibility alias of `icl-mcp`)
-- `run_mcp.sh`
-- `docs/`
-- `examples/`
-- `ICL_STANDARDS.md`
-- `ICL_SEMANTICS_GUIDE.md`
-- `ICL_TEACHING_MANUAL.md`
-- `LICENSE.md`
+```text
+ICL Source
+  -> Syntax Preprocess
+  -> Parser
+  -> AST
+  -> IR
+  -> Lowering
+  -> Target Pack Emit
+  -> Scaffolder
+  -> Output
+```
 
-## Local Smoke Test
+## Stable Targets
+- `python`
+- `js`
+- `rust`
+- `web` (browser JS + HTML/CSS scaffold)
+
+## Experimental Targets
+- `typescript`, `go`, `java`, `csharp`, `cpp`, `php`, `ruby`, `kotlin`, `swift`, `lua`, `dart`
+
+## Key Features
+- Deterministic lexer/parser/semantic pipeline.
+- Target-agnostic IR with typed lowering stage.
+- Language pack registry + custom pack loader (`module[:symbol]`).
+- Multi-target compile in one frontend pass.
+- Multi-target compile returns full bundle artifacts (not fragments) when writing JSON output.
+- Pack manifest validation and contract test harness.
+- Feature coverage matrix audit (`declared support` vs `observed behavior`) via `icl contract test`.
+- Structured unsupported-feature failures (`LOW001`) and structured lowering fallback errors (`LOW002`, `LOW003`).
+- Optional natural alias layer (`prnt`, `mkfn`, `lambda`, etc.) with traceable normalization.
+- Intent graph + source map artifacts.
+- HTTP API, stdio agent adapter, and MCP server.
+
+## Install
 ```bash
-cd ICL_Official
-./run_mcp.sh
+cd /home/aru/ICL
+python -m pip install -e .
 ```
 
-Equivalent:
+## CLI Quick Start
 ```bash
-./bin/icl-mcp --root "$(pwd)"
+# single target
+icl compile examples/basic.icl --target python
+
+# multi-target in one run
+icl compile examples/basic.icl --targets python,js,rust,web -o out
+
+# multi-target JSON bundle output (primary file + files map per target)
+icl compile --code 'x := 1; @print(x);' --targets python,js,web
+
+# explain with AST + IR + lowered + graph
+icl explain examples/basic.icl --target rust
+
+# contract tests (stable packs)
+icl contract test
+
+# include experimental packs in contract run
+icl contract test --all
+
+# list and validate packs
+icl pack list
+icl pack validate
+
+# inspect alias mappings
+icl alias list --mode extended
 ```
 
-## MCP Surface
-Supported MCP methods:
-- `initialize`
-- `ping`
-- `tools/list`
-- `tools/call`
-- `resources/list`
-- `resources/read`
-- `prompts/list`
-- `prompts/get`
+Contract behavior:
+- Stable packs must pass all required contract cases and feature checks.
+- Experimental packs may declare unsupported features; those must fail explicitly with `LOW001`.
 
-Exposed tools:
-- `icl_capabilities`
-- `icl_compile`
-- `icl_check`
-- `icl_explain`
-- `icl_compress`
-- `icl_diff`
-
-## Policy Behavior
-- Path arguments are restricted to `--root` / `ICL_MCP_ROOT`.
-- Plugins are blocked unless allowlisted with `ICL_MCP_PLUGIN_ALLOWLIST`.
-
-## App Setup
-Set this once for examples below:
+## Language Pack Workflow
 ```bash
-ICL_ROOT="/absolute/path/to/ICL_Official"
+# load a custom pack module
+icl compile --code 'x := 1;' --target mypack --pack my_module:register
+
+# inspect built-in stable packs only
+icl pack list --stability stable
 ```
 
-### Codex (CLI/IDE)
-Codex MCP docs: `https://developers.openai.com/codex/mcp`
+## Example ICL
+```icl
+fn add(a:Num, b:Num):Num => a + b;
+x:Num := 4;
+y := @add(x, 6);
+@print(y);
+```
 
-Add server with CLI:
+## AI Speed Benchmark
+Measured on February 17, 2026 in this repo environment for 4-target generation (`python,js,rust,web`):
+- Sequential single-target calls median: `0.006299s`
+- Multi-target shared-frontend median: `0.002855s`
+- Speedup: `2.21x`
+
+Method: 50 iterations of equivalent source with identical targets.
+
+## Service and MCP Integration
+### HTTP API
 ```bash
-codex mcp add icl -- "$ICL_ROOT/bin/icl-mcp" --root "$ICL_ROOT"
+icl serve --host 127.0.0.1 --port 8080
 ```
 
-Optional plugin allowlist:
+### Stdio Adapter
 ```bash
-codex mcp add icl \
-  --env ICL_MCP_PLUGIN_ALLOWLIST=icl.plugins.std_macros \
-  -- "$ICL_ROOT/bin/icl-mcp" --root "$ICL_ROOT"
+icl agent
 ```
 
-Manual config in `~/.codex/config.toml`:
-```toml
-[mcp_servers.icl]
-command = "/absolute/path/to/ICL_Official/bin/icl-mcp"
-args = ["--root", "/absolute/path/to/ICL_Official"]
-startup_timeout_sec = 20
-
-[mcp_servers.icl.env]
-ICL_MCP_ROOT = "/absolute/path/to/ICL_Official"
-```
-
-Verify:
+### MCP Server
 ```bash
-codex mcp --help
-codex mcp list
+icl mcp --root /home/aru/ICL
 ```
-In TUI, run `/mcp`.
 
-### Gemini CLI
-Gemini MCP docs: `https://geminicli.com/docs/tools/mcp-server/`
-
-Add server (user scope):
+### Standalone MCP Binary
 ```bash
-gemini mcp add -s user -e ICL_MCP_ROOT="$ICL_ROOT" \
-  icl "$ICL_ROOT/bin/icl-mcp" -- --root "$ICL_ROOT"
+# build
+.venv/bin/pyinstaller --noconfirm icl-mcp.spec
+
+# run
+./dist/icl-mcp --root /home/aru/ICL
 ```
 
-Optional plugin allowlist:
+Core service methods:
+- `compile`
+- `check`
+- `explain`
+- `compress`
+- `diff`
+- `capabilities`
+
+Static target runnability:
+- `rust` stable emission is validated by runnable golden tests when `rustc` is available in environment.
+
+## Documentation Index
+- `ICL_2.0_UNIVERSAL_TRANSLATION_ARCHITECTURE_PLAN.md`
+- `ICL_LANGUAGE_CONTRACT.md`
+- `UNIVERSAL_ALIAS_MAP.md`
+- `COMPILER_ARCHITECTURE.md`
+- `LANGUAGE_PACK_SPEC.md`
+- `SIMULATION_NOTES.md`
+- `FEATURE_COVERAGE_MATRIX.md`
+- `PHASE4_VALIDATION_REPORT.md`
+- `PHASE5_HARDENING_REPORT.md`
+- `PHASE6_STABILIZATION_REPORT.md`
+- `MIGRATION_NOTES_v2.md`
+- `RELEASE_NOTES_v2.0.0.md`
+- `docs/cli_guide.md`
+
+## Development
 ```bash
-gemini mcp add -s user \
-  -e ICL_MCP_ROOT="$ICL_ROOT" \
-  -e ICL_MCP_PLUGIN_ALLOWLIST=icl.plugins.std_macros \
-  icl "$ICL_ROOT/bin/icl-mcp" -- --root "$ICL_ROOT"
+python -m unittest discover -s tests -v
+
+# focused golden-program validation
+python -m unittest tests.test_golden_programs -v
 ```
 
-Manual config in `~/.gemini/settings.json` (or project `.gemini/settings.json`):
-```json
-{
-  "mcpServers": {
-    "icl": {
-      "command": "/absolute/path/to/ICL_Official/bin/icl-mcp",
-      "args": ["--root", "/absolute/path/to/ICL_Official"],
-      "env": {
-        "ICL_MCP_ROOT": "/absolute/path/to/ICL_Official"
-      }
-    }
-  }
-}
-```
-
-Verify:
-```bash
-gemini mcp list
-```
-In session, run `/mcp`.
-
-### Claude Code
-Claude Code MCP docs: `https://code.claude.com/docs/en/mcp`
-
-Add server (user scope):
-```bash
-claude mcp add --transport stdio --scope user \
-  --env ICL_MCP_ROOT="$ICL_ROOT" \
-  icl -- "$ICL_ROOT/bin/icl-mcp" --root "$ICL_ROOT"
-```
-
-Project-scoped config in `.mcp.json`:
-```json
-{
-  "mcpServers": {
-    "icl": {
-      "type": "stdio",
-      "command": "/absolute/path/to/ICL_Official/bin/icl-mcp",
-      "args": ["--root", "/absolute/path/to/ICL_Official"],
-      "env": {
-        "ICL_MCP_ROOT": "/absolute/path/to/ICL_Official"
-      }
-    }
-  }
-}
-```
-
-Verify:
-```bash
-claude mcp list
-```
-In session, run `/mcp`.
-
-## Verification
-```bash
-sha256sum -c checksums.txt
-```
-
-## Notes
-- This package is Linux x86_64 binary-first.
-- Canonical executable: `bin/icl-mcp`.
-- Compatibility alias: `bin/icp-mcp` (same binary payload).
-- Binary-only packaging lowers casual source exposure, but is not anti-reverse-engineering protection.
+## License
+See `license.md`.

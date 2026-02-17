@@ -1,19 +1,32 @@
-# ICL_Official Release Notes v2.0.0
+# ICL v2.0.0 Release Notes
 
-Release date (UTC): 2026-02-17
+Release Name: `ICL v2.0 — Universal Target Engine`
+Release Date: February 17, 2026
 
-## Source Provenance
-- Upstream source repo: `ScientificAJ/ICL`
-- Upstream commit: `cbfa229`
-- Upstream commit title: `ICL v2 universal workflow, contract coverage, and MCP artifact refresh`
+## Migration Notes
+- Compiler pipeline is now explicit and phase-separated:
+  `Source -> Syntax Preprocess -> Parser -> AST -> IR -> Lowering -> Pack Emit -> Scaffold`.
+- Stable target set is now: `python`, `js`, `rust`, `web`.
+- Experimental targets are declared via pack manifests and enforced by feature coverage.
+- Multi-target compile produces bundle artifacts per target (primary path + files), not fragments.
 
-## Binary Artifacts
-- Canonical executable: `bin/icl-mcp`
-- Compatibility alias: `bin/icp-mcp`
-- SHA256 (`icl-mcp` / `icp-mcp`):
-  - `b926fb55436aae37083e6c9a38d8c38d26a9e1b32802ca01bc47b2486529df54`
+## Breaking Changes
+- `explain` payload includes normalized `ir` and `lowered` representations alongside `ast`, `graph`, and `source_map`.
+- Target support is now governed by pack feature declarations; unsupported features fail explicitly (`LOW001`) instead of implicit degradation.
 
-## Validation
-- `sha256sum -c checksums.txt` passed.
-- `./bin/icl-mcp --help` passed.
-- `./bin/icp-mcp --help` passed.
+## New Features
+- Universal natural alias layer (optional): `mkfn`, `prnt`, `lambda`, and extended aliases in controlled mode.
+- First-class lambda expression support (`lam(...) => expr`) through parser, semantic, IR, lowering, and stable emitters.
+- Contract matrix now includes lambda coverage and validates stable-pack parity.
+- Phase 4 artifacts produced:
+  - `output/phase4/contract_stable.json`
+  - `output/phase4/contract_all.json`
+  - `output/phase4/golden_tests.txt`
+  - `output/phase4/snapshots/*`
+- Phase 5 backward-compat report produced:
+  - `output/phase5/backward_compat_report.json`
+
+## Known Limitations
+- Experimental targets remain best-effort scaffolds and are not stable guarantees.
+- Alias normalization is opt-in by design (`--natural`) to preserve strict canonical parsing by default.
+- Rust lambda emission currently maps to closure syntax with symbolic `Fn` handling and remains limited to current core contract shapes.
