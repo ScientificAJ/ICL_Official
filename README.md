@@ -10,8 +10,8 @@ This repo ships:
 It intentionally does not ship the full compiler source tree.
 
 ## Contents
-- `bin/icl-mcp` (Linux x86_64 executable)
-- `bin/icp-mcp` (compat alias executable)
+- `bin/icl-mcp` (Linux x86_64 executable, canonical)
+- `bin/icp-mcp` (compatibility alias of `icl-mcp`)
 - `run_mcp.sh`
 - `docs/`
 - `examples/`
@@ -170,4 +170,6 @@ sha256sum -c checksums.txt
 
 ## Notes
 - This package is Linux x86_64 binary-first.
+- Canonical executable: `bin/icl-mcp`.
+- Compatibility alias: `bin/icp-mcp` (same binary payload).
 - Binary-only packaging lowers casual source exposure, but is not anti-reverse-engineering protection.

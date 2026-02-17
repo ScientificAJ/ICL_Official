@@ -1,0 +1,22 @@
+name: Binary Smoke
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  verify-binaries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify checksums
+        run: sha256sum -c checksums.txt
+
+      - name: Smoke test canonical executable
+        run: ./bin/icl-mcp --help
+
+      - name: Smoke test compatibility alias
+        run: ./bin/icp-mcp --help
